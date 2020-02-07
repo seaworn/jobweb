@@ -3,6 +3,44 @@
     <h3 class="font-weight-bold">Academic Qualifications</h3>
     <hr class="my-2" />
     <pre>formData: {{JSON.stringify(formData, null, 2)}}</pre>
+<div class="justify-content-center">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Institution</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Academic Level</th>
+          <th>Course of Study</th>
+          <th>Specialization</th>
+          <th>Qualification Grade</th>
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+      
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          
+          <a href="#" ><i class='fa fa-edit'></i>Edit</a>
+          <a href="#" ><i class="fa fa-trash"></i>Delete</a>
+
+
+        </td>
+      </tr>
+      
+
+    </table>
+    
+  </div>
+
+
     <form action="" method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-group">
         <label for="institution">Institition</label>
@@ -14,6 +52,7 @@
           placeholder="e.g. University of Nairobi"
           v-model="formData.institution"
         />
+        
       </div>
       <div class="form-row">
         <div class="form-group col-md-4">

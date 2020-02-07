@@ -3,6 +3,49 @@
     <h3 class="font-weight-bold">Referees</h3>
     <hr class="my-2" />
     <pre>formData: {{JSON.stringify(formData, null, 2)}}</pre>
+    <div class="justify-content-center">
+    <table class="table">
+      <thead>AddressPhone Number EmailHow long have known each other?
+        <tr>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Other Name</th>
+          <th>Organization</th>
+          <th>Address</th>
+          <th>Phone No</th>
+          <th>Email Address</th>
+          <th>Relationship</th>
+          <th>Time Relationship</th>
+          
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+      
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        
+      <td>
+          
+          <a href="#" ><i class='fa fa-edit'></i>Edit</a>
+          <a href="#" ><i class="fa fa-trash"></i>Delete</a>
+
+
+        </td>
+      </tr>
+      
+
+    </table>
+    
+  </div>
+
 
     <form action="" method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-row">

@@ -1358,7 +1358,6 @@ module.exports = function isAbsoluteURL(url) {
 
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var isValidXss = __webpack_require__(/*! ./isValidXss */ "./node_modules/axios/lib/helpers/isValidXss.js");
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -1378,10 +1377,6 @@ module.exports = (
     */
       function resolveURL(url) {
         var href = url;
-
-        if (isValidXss(url)) {
-          throw new Error('URL contains XSS injection attempt');
-        }
 
         if (msie) {
         // IE needs attribute set twice to normalize properties
@@ -1428,25 +1423,6 @@ module.exports = (
       };
     })()
 );
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isValidXss.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isValidXss.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isValidXss(requestURL) {
-  var xssRegex = /(\b)(on\w+)=|javascript|(<\s*)(\/*)script/gi;
-  return xssRegex.test(requestURL);
-};
-
 
 
 /***/ }),
@@ -2036,6 +2012,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AcademicQualificationsForm',
   props: {
@@ -2106,6 +2121,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -2623,6 +2640,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ProfessionalCertificationForm',
   props: {
@@ -2659,6 +2710,42 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2869,6 +2956,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'RefereeForm',
   props: {
@@ -2908,6 +3038,34 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3024,8 +3182,10 @@ var RefereeForm = __webpack_require__(/*! ./RefereeForm.vue */ "./resources/js/c
         this.currentIndex++;
       }
     },
-    submitCompleteForm: function () {
-      var _submitCompleteForm = _asyncToGenerator(
+    submitCompleteForm: function submitCompleteForm() {
+      var _this = this;
+
+      return _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var response;
@@ -3034,9 +3194,9 @@ var RefereeForm = __webpack_require__(/*! ./RefereeForm.vue */ "./resources/js/c
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                console.log(this.formData);
+                console.log(_this.formData);
                 _context.next = 4;
-                return axios.post("api/create-profile", this.formData);
+                return axios.post("api/create-profile", _this.formData);
 
               case 4:
                 response = _context.sent;
@@ -3054,15 +3214,9 @@ var RefereeForm = __webpack_require__(/*! ./RefereeForm.vue */ "./resources/js/c
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
-      }));
-
-      function submitCompleteForm() {
-        return _submitCompleteForm.apply(this, arguments);
-      }
-
-      return submitCompleteForm;
-    }()
+        }, _callee, null, [[0, 8]]);
+      }))();
+    }
   }
 });
 
@@ -3077,6 +3231,46 @@ var RefereeForm = __webpack_require__(/*! ./RefereeForm.vue */ "./resources/js/c
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -35442,7 +35636,7 @@ return jQuery;
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.16.0
+ * @version 1.16.1
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -35788,7 +35982,7 @@ function getBordersSize(styles, axis) {
   var sideA = axis === 'x' ? 'Left' : 'Top';
   var sideB = sideA === 'Left' ? 'Right' : 'Bottom';
 
-  return parseFloat(styles['border' + sideA + 'Width'], 10) + parseFloat(styles['border' + sideB + 'Width'], 10);
+  return parseFloat(styles['border' + sideA + 'Width']) + parseFloat(styles['border' + sideB + 'Width']);
 }
 
 function getSize(axis, body, html, computedStyle) {
@@ -35943,8 +36137,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   var scrollParent = getScrollParent(children);
 
   var styles = getStyleComputedProperty(parent);
-  var borderTopWidth = parseFloat(styles.borderTopWidth, 10);
-  var borderLeftWidth = parseFloat(styles.borderLeftWidth, 10);
+  var borderTopWidth = parseFloat(styles.borderTopWidth);
+  var borderLeftWidth = parseFloat(styles.borderLeftWidth);
 
   // In cases where the parent is fixed, we must ignore negative scroll in offset calc
   if (fixedPosition && isHTML) {
@@ -35965,8 +36159,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   // differently when margins are applied to it. The margins are included in
   // the box of the documentElement, in the other cases not.
   if (!isIE10 && isHTML) {
-    var marginTop = parseFloat(styles.marginTop, 10);
-    var marginLeft = parseFloat(styles.marginLeft, 10);
+    var marginTop = parseFloat(styles.marginTop);
+    var marginLeft = parseFloat(styles.marginLeft);
 
     offsets.top -= borderTopWidth - marginTop;
     offsets.bottom -= borderTopWidth - marginTop;
@@ -36905,8 +37099,8 @@ function arrow(data, options) {
   // Compute the sideValue using the updated popper offsets
   // take popper margin in account because we don't have this info available
   var css = getStyleComputedProperty(data.instance.popper);
-  var popperMarginSide = parseFloat(css['margin' + sideCapitalized], 10);
-  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width'], 10);
+  var popperMarginSide = parseFloat(css['margin' + sideCapitalized]);
+  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width']);
   var sideValue = center - data.offsets.popper[side] - popperMarginSide - popperBorderSide;
 
   // prevent arrowElement from being placed not contiguously to its popper
@@ -39292,6 +39486,8 @@ var render = function() {
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
     _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
     _c(
       "form",
       {
@@ -39533,12 +39729,68 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Institution")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("From")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("To")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Academic Level")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Course of Study")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Specialization")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Qualification Grade")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40625,6 +40877,8 @@ var render = function() {
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
     _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
     _c(
       "form",
       {
@@ -40831,12 +41085,60 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Certificate Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Issuing Body")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Description")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Year")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("expiry")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40885,6 +41187,8 @@ var render = function() {
     _c("pre", [
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
+    _vm._v(" "),
+    _vm._m(0),
     _vm._v(" "),
     _c(
       "form",
@@ -41026,12 +41330,60 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Professional Body")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Membership Reg  No.")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Membership")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Membership Type")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Membership Expiry Date")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41078,6 +41430,8 @@ var render = function() {
     _c("pre", [
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
+    _vm._v(" "),
+    _vm._m(0),
     _vm._v(" "),
     _c(
       "form",
@@ -41394,12 +41748,79 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _vm._v(
+            "AddressPhone Number EmailHow long have known each other?\n      "
+          ),
+          _c("tr", [
+            _c("th", [_vm._v("First Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Middle Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Other Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Organization")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Address")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Phone No")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Email Address")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Relationship")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Time Relationship")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41446,6 +41867,8 @@ var render = function() {
     _c("pre", [
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
+    _vm._v(" "),
+    _vm._m(0),
     _vm._v(" "),
     _c(
       "form",
@@ -41500,12 +41923,44 @@ var render = function() {
           [_vm._v("Add")]
         ),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", { attrs: { colspan: "14" } }, [_vm._v("Skills")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41580,6 +42035,8 @@ var render = function() {
     _c("pre", [
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
+    _vm._v(" "),
+    _vm._m(0),
     _vm._v(" "),
     _c(
       "form",
@@ -41754,12 +42211,62 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(1)
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "justify-content-center" }, [
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("From")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("To")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Position")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Organization")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Roles & Responsibilities")]),
+            _vm._v(" "),
+            _c("th", { attrs: { colspan: "2" } }, [_vm._v("Action")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td"),
+          _vm._v(" "),
+          _c("td", [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-edit" }),
+              _vm._v("Edit")
+            ]),
+            _vm._v(" "),
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "fa fa-trash" }),
+              _vm._v("Delete")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -56623,8 +57130,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/enwawerueli/workspace/jobweb/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/enwawerueli/workspace/jobweb/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\jobweb\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\jobweb\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -4,6 +4,34 @@
     <hr class="my-2" />
     <pre>formData: {{JSON.stringify(formData, null, 2)}}</pre>
 
+    <div class="justify-content-center">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="14">Skills</th>
+          
+          <th colspan="2">Action</th>
+        </tr>
+      </thead>
+      
+      <tr>
+        <td></td>
+
+      <td>
+          
+          <a href="#" ><i class='fa fa-edit'></i>Edit</a>
+          <a href="#" ><i class="fa fa-trash"></i>Delete</a>
+
+
+        </td>
+      </tr>
+      
+
+    </table>
+    
+  </div>
+
+
     <form action="" method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-group">
         <label for="skill">Add Skill</label>
