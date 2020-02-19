@@ -13,12 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function () {
+
+// Auth::routes();
+Route::fallback(function () {
     return view('index');
-});
-Route::get('/welcome', function () {
-    return view('welcome');
-});
-Route::get('/demo', function () {
-    return view('demo');
 });

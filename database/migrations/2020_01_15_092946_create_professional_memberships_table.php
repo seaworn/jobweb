@@ -15,10 +15,10 @@ class CreateProfessionalMembershipsTable extends Migration
     {
         Schema::create('professional_memberships', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('institution');
+            $table->string('professional_body');
             $table->string('reg_no');
             $table->string('membership_type');
-            $table->datetime('valid_until');
+            $table->date('expiry')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

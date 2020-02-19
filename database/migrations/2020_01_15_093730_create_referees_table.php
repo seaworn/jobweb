@@ -15,12 +15,14 @@ class CreateRefereesTable extends Migration
     {
         Schema::create('referees', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('middle_name');
+            $table->string('other_names');
             $table->string('occupation');
-            $table->string('phone_no')->nullable();
+            $table->string('phone_no');
             $table->string('email')->nullable();
-            $table->string('relationship')->nullable();
-            $table->string('length_of_relationship')->nullable();
+            $table->string('relationship');
+            $table->string('length_of_relationship');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

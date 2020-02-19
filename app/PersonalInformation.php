@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class PersonalInformation extends Model
 {
-    protected $table = 'personal_profile';
+    protected $table = 'personal_information';
     
     public function user() {
         return $this->belongsTo(User::class);

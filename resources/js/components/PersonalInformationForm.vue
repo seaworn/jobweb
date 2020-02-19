@@ -1,12 +1,10 @@
 <template>
   <div>
-    <h3 class="font-weight-bold">Personal Information</h3>
+    <h3 class="font-weight-bold">Personal Details</h3>
     <hr class="my-2" />
-    <pre>formData: {{JSON.stringify(formData, null, 2)}}</pre>
+    <!-- <pre>values: {{JSON.stringify(values, null, 2)}}</pre> -->
     <!-- <pre>$v: {{$v}}</pre> -->
-
-      
-    <form action="" method="POST" @submit.prevent="handleSubmit" novalidate>
+    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
@@ -16,14 +14,10 @@
             id="firstName"
             class="form-control"
             placeholder="First Name"
-            v-model.trim="$v.formData.firstName.$model"
-            :class="[$v.formData.firstName.$error ? 'is-invalid' : $v.formData.firstName.$dirty ? 'is-valid' : '']"
+            v-model.trim="$v.values.firstName.$model"
+            :class="[validationClass('firstName')]"
           />
-          <div class="invalid-feedback">
-            <span v-if="!$v.formData.firstName.required && $v.formData.firstName.$dirty">This field is required.</span>
-            <span v-if="!$v.formData.firstName.alpha">Only letters allowed.</span>
-            <span v-if="!$v.formData.firstName.minLength">Must be atleast {{$v.formData.firstName.$params.minLength.min}} characters.</span>
-          </div>
+          <name-error path="firstName" :v="$v" />
         </div>
         <div class="form-group col-md-4">
           <label for="middleName">Middle Name</label>
@@ -33,29 +27,23 @@
             id="middleName"
             class="form-control"
             placeholder="Middle Name"
-            v-model.trim="$v.formData.middleName.$model"
-            :class="[$v.formData.middleName.$error ? 'is-invalid' : $v.formData.middleName.$dirty ? 'is-valid' : '']"
+            v-model.trim="$v.values.middleName.$model"
+            :class="[validationClass('middleName')]"
           />
-          <div class="invalid-feedback">
-            <span v-if="!$v.formData.middleName.required && $v.formData.middleName.$dirty">This field is required.</span>
-            <span v-if="!$v.formData.middleName.alpha">Only letters allowed.</span>
-          </div>
+          <name-error path="middleName" :v="$v" />
         </div>
         <div class="form-group col-md-4">
-          <label for="otherName">Other Name</label>
+          <label for="otherNames">Other Name</label>
           <input
             type="text"
-            name="otherName"
-            id="otherName"
+            name="otherNames"
+            id="otherNames"
             class="form-control"
             placeholder="Other Name(s)"
-            v-model="$v.formData.otherName.$model"
-            :class="[$v.formData.otherName.$error ? 'is-invalid' : $v.formData.otherName.$dirty ? 'is-valid' : '']"
+            v-model="$v.values.otherNames.$model"
+            :class="[validationClass('otherNames')]"
           />
-          <div class="invalid-feedback">
-            <span v-if="!$v.formData.otherName.required && $v.formData.otherName.$dirty">This field is required.</span>
-            <span v-if="!$v.formData.otherName.alpha">Only letters allowed.</span>
-          </div>
+          <name-error path="otherNames" :v="$v" />
         </div>
       </div>
       <div class="form-row">
@@ -67,11 +55,45 @@
             id="dob"
             class="form-control"
             placeholder="MM/DD/YYYY"
-            v-model="$v.formData.dob.$model"
-            :class="[$v.formData.dob.$error ? 'is-invalid' : $v.formData.dob.$dirty ? 'is-valid' : '']"
+            v-model="$v.values.dob.$model"
+            :class="[validationClass('dob')]"
           />
-          <div class="invalid-feedback">
-            
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group col-md-4">
+          <p>Gender</p>
+          <div class="form-check-inline">
+            <input
+              type="radio"
+              name="gender"
+              value="M"
+              id="genderMale"
+              class="form-check-input"
+              v-model="$v.values.gender.$model"
+            />
+            <label for="genderMale" class="form-check-label">Male</label>
+          </div>
+          <div class="form-check-inline">
+            <input
+              type="radio"
+              name="gender"
+              value="F"
+              id="genderFemale"
+              class="form-check-input"
+              v-model="$v.values.gender.$model"
+            />
+            <label for="genderFemale" class="form-check-label">Female</label>
+          </div>
+          <div class="form-check-inline">
+            <input
+              type="radio"
+              name="gender"
+              value="X"
+              id="genderOther"
+              class="form-check-input"
+              v-model="$v.values.gender.$model"
+            />
+            <label for="genderOther" class="form-check-label">Other</label>
           </div>
         </div>
       </div>
@@ -84,11 +106,11 @@
             id="nationality"
             class="form-control"
             placeholder="e.g. Kenyan"
-            v-model="$v.formData.nationality.$model"
-            :class="[$v.formData.nationality.$error ? 'is-invalid' : $v.formData.nationality.$dirty ? 'is-valid' : '']"
+            v-model="$v.values.nationality.$model"
+            :class="[validationClass('nationality')]"
           />
           <div class="invalid-feedback">
-            
+            <required-error path="nationality" :v="$v" />
           </div>
         </div>
         <div class="form-group col-md-4">
@@ -99,8 +121,12 @@
             id="county"
             class="form-control"
             placeholder="e.g. Nairobi"
-            v-model="formData.county"
+            v-model="$v.values.county.$model"
+            :class="[validationClass('county')]"
           />
+          <div class="invalid-feedback">
+            <required-error path="county" :v="$v" />
+          </div>
         </div>
         <div class="form-group col-md-4">
           <label for="subCounty">Sub-County</label>
@@ -110,8 +136,12 @@
             id="subCounty"
             class="form-control"
             placeholder="e.g. Kasarani"
-            v-model="formData.subCounty"
+            v-model="$v.values.subCounty.$model"
+            :class="[validationClass('subCounty')]"
           />
+          <div class="invalid-feedback">
+            <required-error path="subCounty" :v="$v" />
+          </div>
         </div>
       </div>
       <div class="form-row">
@@ -123,8 +153,12 @@
             id="address"
             class="form-control"
             placeholder="e.g. 010-00100, Nairobi"
-            v-model="formData.address"
+            v-model="$v.values.address.$model"
+            :class="[validationClass('address')]"
           />
+          <div class="invalid-feedback">
+            <required-error path="address" :v="$v" />
+          </div>
         </div>
         <div class="form-group col-md-4">
           <label for="phoneNo">Phone Number</label>
@@ -134,29 +168,10 @@
             id="phoneNo"
             class="form-control"
             placeholder="e.g. 07********"
-            v-model="$v.formData.phoneNo.$model"
-            :class="[$v.formData.phoneNo.$error ? 'is-invalid' : $v.formData.phoneNo.$dirty ? 'is-valid' : '']"
+            v-model="$v.values.phoneNo.$model"
+            :class="[validationClass('phoneNo')]"
           />
-          <div class="invalid-feedback">
-            <span v-if="!$v.formData.phoneNo.required && $v.formData.email.$dirty">This field is required.</span>
-            <span v-if="!$v.formData.phoneNo.numeric || !$v.formData.phoneNo.maxLength || !$v.formData.phoneNo.minLength">Enter a valid phone number.</span>
-          </div>
-        </div>
-        <div class="form-group col-md-4">
-          <label for="email">Email</label>
-          <input
-            type="text"
-            name="email"
-            id="email"
-            class="form-control"
-            placeholder="e.g. name@example.com"
-            v-model="$v.formData.email.$model"
-            :class="[$v.formData.email.$error ? 'is-invalid' : $v.formData.email.$dirty ? 'is-valid' : '']"
-          />
-          <div class="invalid-feedback">
-            <span v-if="!$v.formData.email.required && $v.formData.email.$dirty">This field is required.</span>
-            <span v-if="!$v.formData.email.email">Enter a valid email.</span>
-          </div>
+          <phone-no-error path="phoneNo" :v="$v" />
         </div>
       </div>
       <div class="form-group">
@@ -168,7 +183,7 @@
             :value="true"
             id="disabilityTrue"
             class="form-check-input"
-            v-model="formData.disability.has"
+            v-model="$v.values.disability.has.$model"
           />
           <label for="disabilityTrue" class="form-check-label">Yes</label>
         </div>
@@ -179,12 +194,12 @@
             :value="false"
             id="disabilityFalse"
             class="form-check-input"
-            v-model="formData.disability.has"
+            v-model="$v.values.disability.has.$model"
           />
           <label for="disabilityFalse" class="form-check-label">No</label>
         </div>
       </div>
-      <div class="form-group" v-show="formData.disability.has">
+      <div class="form-group" v-show="values.disability.has">
         <label for="disabilityDetails">If yes, please describe briefly</label>
         <textarea
           type="text"
@@ -192,8 +207,12 @@
           id="disabilityDetails"
           class="form-control"
           placeholder="e.g. Albinism, etc."
-          v-model="formData.disability.details"
+          v-model="$v.values.disability.details.$model"
+          :class="[validationClass('disability.details')]"
         ></textarea>
+        <div class="invalid-feedback">
+          <required-error path="disability.details" :v="$v" />
+        </div>
       </div>
       <div class="form-group">
         <p>Do you have a criminal record?</p>
@@ -204,7 +223,7 @@
             :value="true"
             id="criminalRecordTrue"
             class="form-check-input"
-            v-model="formData.criminalRecord.has"
+            v-model="$v.values.criminalRecord.has.$model"
           />
           <label for="criminalRecordTrue" class="form-check-label">Yes</label>
         </div>
@@ -215,12 +234,12 @@
             :value="false"
             id="criminalRecordFalse"
             class="form-check-input"
-            v-model="formData.criminalRecord.has"
+            v-model="$v.values.criminalRecord.has.$model"
           />
           <label for="criminalRecordFalse" class="form-check-label">No</label>
         </div>
       </div>
-      <div class="form-group" v-show="formData.criminalRecord.has">
+      <div class="form-group" v-show="values.criminalRecord.has">
         <label for="criminalRecordDetails">If yes, please describe briefly</label>
         <textarea
           type="text"
@@ -228,21 +247,28 @@
           id="criminalRecordDetails"
           class="form-control"
           placeholder="e.g. Drunk driving, etc."
-          v-model="formData.criminalRecord.details"
+          v-model="$v.values.criminalRecord.details.$model"
+          :class="[validationClass('criminalRecord.details')]"
         ></textarea>
+        <div class="invalid-feedback">
+          <required-error path="criminalRecord.details" :v="$v" />
+        </div>
       </div>
-      <p>Contact Person Details</p>
+      <h3 class="font-weight-bold">Contact Person Details</h3>
+      <hr class="my-2" />
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="contactPersonFirstName">First Name</label>
           <input
             type="text"
-            name="[contactPerson.FirstName]"
+            name="contactPersonFirstName"
             id="contactPersonFirstName"
             class="form-control"
             placeholder="First Name"
-            v-model="formData.contactPerson.firstName"
+            v-model="$v.values.contactPerson.firstName.$model"
+            :class="[validationClass('contactPerson.firstName')]"
           />
+          <name-error path="contactPerson.firstName" :v="$v" />
         </div>
         <div class="form-group col-md-4">
           <label for="contactPersonMiddleName">Middle Name</label>
@@ -252,19 +278,23 @@
             id="contactPersonMiddleName"
             class="form-control"
             placeholder="Middle Name"
-            v-model="formData.contactPerson.middleName"
+            v-model="$v.values.contactPerson.middleName.$model"
+            :class="[validationClass('contactPerson.middleName')]"
           />
+          <name-error path="contactPerson.middleName" :v="$v" />
         </div>
         <div class="form-group col-md-4">
-          <label for="contactPersonOtherName">Other Name</label>
+          <label for="contactPersonOtherNames">Other Name</label>
           <input
             type="text"
-            name="contactPersonOtherName"
-            id="contactPersonOtherName"
+            name="contactPersonOtherNames"
+            id="contactPersonOtherNames"
             class="form-control"
             placeholder="Other Name(s)"
-            v-model="formData.contactPerson.otherName"
+            v-model="$v.values.contactPerson.otherNames.$model"
+            :class="[validationClass('contactPerson.otherNames')]"
           />
+          <name-error path="contactPerson.otherNames" :v="$v" />
         </div>
       </div>
       <div class="form-row">
@@ -276,8 +306,10 @@
             id="contactPersonPhoneNo"
             class="form-control"
             placeholder="e.g. 07********"
-            v-model="formData.contactPerson.phoneNo"
+            v-model="$v.values.contactPerson.phoneNo.$model"
+            :class="[validationClass('contactPerson.phoneNo')]"
           />
+          <phone-no-error path="contactPerson.phoneNo" :v="$v" />
         </div>
         <div class="form-group col-md-4">
           <label for="contactPersonEmail">Email</label>
@@ -287,144 +319,112 @@
             id="contactPersonEmail"
             class="form-control"
             placeholder="e.g. name@example.com"
-            v-model="formData.contactPerson.email"
+            v-model="$v.values.contactPerson.email.$model"
+            :class="[validationClass('contactPerson.email')]"
           />
+          <email-error path="contactPerson.email" :v="$v" />
         </div>
       </div>
-      <div style="display: flex; flex-direction: row-reverse;">
-        <button type="submit" class="btn btn-success" :disabled="$v.formData.$anyError">Next</button>
-      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
     </form>
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="btn btn-success" @click="$emit('next')">Next</button>
+    </div>
   </div>
 </template>
 
 <script>
-const {required, alpha, email, minLength, maxLength, numeric, minValue} = require('vuelidate/lib/validators')
+const {
+  required,
+  alpha,
+  email,
+  minLength,
+  maxLength,
+  numeric,
+  minValue,
+  requiredIf
+} = require("vuelidate/lib/validators");
+const { FormMixin } = require("./mixins");
+
+const initialValues = {
+  firstName: "",
+  middleName: "",
+  otherNames: "",
+  nationality: "",
+  dob: "",
+  gender: "M",
+  address: "",
+  phoneNo: "",
+  county: "",
+  subCounty: "",
+  disability: {
+    has: false,
+    details: ""
+  },
+  criminalRecord: {
+    has: false,
+    details: ""
+  },
+  contactPerson: {
+    firstName: "",
+    middleName: "",
+    otherNames: "",
+    phoneNo: "",
+    email: ""
+  }
+};
 
 export default {
-  name: 'PersonalInformationForm',
-  props: {eventBus: Vue},
-  data() {
+  name: "PersonalInformationForm",
+  props: { eventBus: Vue },
+  mixins: [FormMixin],
+  data: function() {
     return {
-      formId: 'personalInfo',
-      formData: {
-        firstName: '',
-        middleName: '',
-        nationality: '',
-        dob: '',
-        address: '',
-        email: '',
-        phoneNo: '',
-        county: '',
-        subCounty: '',
-        disability: {
-          has: false,
-          details: ''
-        },
-        criminalRecord: {
-          has: false,
-          details: ''
-        },
-        contactPerson: {
-          firstName: '',
-          middleName: '',
-          otherName: '',
-          phoneNo: '',
-          email: ''
-        }
-      }
-    }
+      values: { ...initialValues },
+      resourcePath: `/personal-information`
+    };
   },
   validations: {
-    formData: {
-      firstName: {
-        required,
-        alpha,
-        minLength: minLength(2)
-      },
-      middleName: {
-        required,
-        alpha,
-        minLength: minLength(2)
-      },
-      otherName: {
-        required,
-        alpha,
-        minLength: minLength(2)
-      },
-      dob: {
-        minValue: minValue(Date.now())
-      },
-      nationality: {
-        alpha
-      },
-      address: {
-        required
-      },
-      email: {
-        required,
-        email
-      },
+    values: {
+      firstName: { required, alpha, minLength: minLength(2) },
+      middleName: { required, alpha, minLength: minLength(2) },
+      otherNames: { required, alpha, minLength: minLength(2) },
+      dob: { required, minValue: minValue(new Date()) },
+      gender: { required },
+      nationality: { required, alpha },
+      address: { required },
       phoneNo: {
         required,
         numeric,
         maxLength: maxLength(10),
         minLength: minLength(10)
       },
-      county: {
-        required,
-        alpha
-      },
-      subCounty: {
-        required,
-        alpha
-      },
+      county: { required, alpha },
+      subCounty: { required, alpha },
       disability: {
-        has: {
-          required
-        },
-        details: {
-
-        }
+        has: { required },
+        details: { requiredIfHasDisability: requiredIf("has") }
       },
       criminalRecord: {
-        has: {
-          required
-        },
-        details: {
-
-        }
+        has: { required },
+        details: { requiredIfHasCriminalRecord: requiredIf("has") }
       },
       contactPerson: {
-        firstName: {
-          required,
-          alpha,
-          minLength: minLength(2)
-        },
-        middleName: {
-          required,
-          alpha,
-          minLength: minLength(2)
-        },
-        otherName: {
-          required,
-          alpha,
-          minLength: minLength(2)
-        },
+        firstName: { required, alpha, minLength: minLength(2) },
+        middleName: { required, alpha, minLength: minLength(2) },
+        otherNames: { required, alpha, minLength: minLength(2) },
         phoneNo: {
           required,
           numeric,
           maxLength: maxLength(10),
           minLength: minLength(10)
         },
-        email: {
-          email
-        }
+        email: { required, email }
       }
     }
   },
   methods: {
-    handleSubmit() {this.$emit('validated', this)}
+    
   }
 };
 </script>

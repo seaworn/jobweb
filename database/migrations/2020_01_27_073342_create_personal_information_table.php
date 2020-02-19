@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonalProfileTable extends Migration
+class CreatePersonalInformationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,20 @@ class CreatePersonalProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('personal_profile', function (Blueprint $table) {
+        Schema::create('personal_information', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('first_name');
             $table->string('middle_name');
-            $table->string('last_name')->nullable();
-            $table->string('gender');
+            $table->string('other_names')->nullable();
+            $table->char('gender');
             $table->string('dob');
             $table->string('nationality');
             $table->string('county');
-            $table->string('subcounty');
+            $table->string('sub_county');
             $table->string('address');
             $table->string('phone_no');
-            $table->string('email')->unique();
-            $table->boolean('disability');
-            $table->string('disability_details');
-            $table->boolean('criminal_record');
-            $table->string('criminal_details');
+            $table->text('disability')->nullable();
+            $table->text('criminal_record')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
@@ -43,6 +40,6 @@ class CreatePersonalProfileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_profile');
+        Schema::dropIfExists('personal_information');
     }
 }

@@ -15,10 +15,12 @@ class CreateProfessionalCertificationsTable extends Migration
     {
         Schema::create('professional_certifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->datetime('issued_on');
-            $table->string('issuing_institution');
             $table->string('certificate_name');
-            $table->datetime('valid_until');
+            $table->string('issuing_body');
+            $table->text('description');
+            $table->date('issued_on');
+            $table->date('expiry')->nullable();
+            $table->string('file_path');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

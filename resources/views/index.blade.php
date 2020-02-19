@@ -20,8 +20,45 @@
   </head>
   <body>
     <div id="app">
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="margin-bottom: 50px;">
+        <div class="container">
+          <router-link :to="{name: 'index'}" class="navbar-brand">
+              {{ config('app.name', 'Laravel') }}
+          </router-link>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+            </ul>
+            <ul class="navbar-nav ml-auto" v-if="session.login === true">
+              <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  @{{session.username}}<span class="caret"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <router-link :to="{name: 'profile', params: {username: session.username}}" class="dropdown-item">Profile</router-link>
+                  <button type="button" class="btn btn-link dropdown-item" @click="logout">Logout</button>
+                </div>
+              </li>
+            </ul>
+            <ul class="navbar-nav ml-auto" v-else>
+              <li class="nav-item">
+                  <router-link :to="{name: 'login'}" class="nav-link">Login</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link :to="{name: 'register'}" class="nav-link">Register</router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
       <div class="container">
-        <user-profile-form></user-profile-form>
+        <div id="notifications">
+          <notifications />
+        </div>
+        <router-view />
       </div>
     </div>
     <!-- Scripts -->

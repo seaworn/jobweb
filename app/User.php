@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username', 'email', 'password',
     ];
 
     /**
@@ -37,28 +38,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function profile() {
-        return $this->hasOne(Profile::class);
+    public function personal_information() {
+        return $this->hasOne(PersonalInformation::class);
     }
 
-    public function education() {
-        return $this->hasMany(Education::class);
+    public function academic_qualifications() {
+        return $this->hasMany(AcademicQualification::class);
     }
 
-    public function certifications() {
-        return $this->hasMany(Certification::class);
+    public function professional_certifications() {
+        return $this->hasMany(ProfessionalCertification::class);
+    }
+
+    public function professional_memberships() {
+        return $this->hasMany(ProfessionalMembership::class);
     }
 
     public function skills() {
-        return $this->hasMany(Skill::class);
+        return $this->belongsToMany(Skill::class);
     }
 
-    public function experience() {
-        return $this->hasMany(Experience::class);
+    public function work_experience() {
+        return $this->hasMany(WorkExperience::class);
     }
 
-    public function contacts() {
-        return $this->hasMany(Contact::class);
+    public function contact_persons() {
+        return $this->hasMany(ContactPerson::class);
     }
 
     public function referees() {

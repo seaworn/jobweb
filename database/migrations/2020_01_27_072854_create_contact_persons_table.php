@@ -17,9 +17,9 @@ class CreateContactPersonsTable extends Migration
             $table->bigIncrements('id');
             $table->string('first_name');
             $table->string('middle_name');
-            $table->string('last_name')->nullable();
+            $table->string('other_names')->nullable();
             $table->string('phone_no');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class ProfessionalCertification extends Model
 {
-    protected $table = 'contact_persons';
-    
+    protected $table = 'professional_certifications';
+
     public function user() {
         return $this->belongsTo(User::class);
     }

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Certification extends Model
+class WorkExperience extends Model
 {
-    protected $table = 'professional_certifications';
+    protected $table = 'work_experience';
 
     public function user() {
         return $this->belongsTo(User::class);

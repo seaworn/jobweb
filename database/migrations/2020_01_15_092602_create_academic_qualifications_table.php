@@ -18,10 +18,11 @@ class CreateAcademicQualificationsTable extends Migration
             $table->datetime('from');
             $table->datetime('to');
             $table->string('institution');
-            $table->string('level');
+            $table->string('academic_level');
             $table->string('course');
             $table->string('specialization');
             $table->string('grade');
+            $table->string('file_path');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

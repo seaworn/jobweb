@@ -1,64 +1,55 @@
 <template>
-  <component :is="currentForm" :event-bus="eventBus" @validated="nextForm"></component>
+  <div>
+    <div id="navigation" class="d-flex justify-content-center my-4">
+      <button
+        type="button"
+        class="btn shadow mx-2"
+        v-for="(_, idx) in forms"
+        :key="idx"
+        @click="currentIndex = idx"
+        :class="[idx === currentIndex ? 'btn-success' : 'btn-secondary']"
+      >{{idx + 1}}</button>
+    </div>
+    <component :is="currentForm" :event-bus="eventBus" @next="next"/>
+  </div>
 </template>
 
 <script>
-const PersonalInformationForm = require("./PersonalInformationForm.vue").default;
-const AcademicQualificationForm = require("./AcademicQualificationForm.vue").default;
-const WorkExperienceForm = require("./WorkExperienceForm.vue").default;
-const ProfessionalCertificationForm = require("./ProfessionalCertificationForm.vue").default;
-const ProfessionalMembershipForm = require("./ProfessionalMembershipForm.vue").default;
-const SkillForm = require("./SkillForm.vue").default;
-const RefereeForm = require("./RefereeForm.vue").default;
-
 export default {
   name: "UserProfileForm",
-  data() {
+  data: function() {
     return {
-      forms: [
-        PersonalInformationForm,
-        AcademicQualificationForm,
-        ProfessionalCertificationForm,
-        SkillForm,
-        ProfessionalMembershipForm,
-        WorkExperienceForm,
-        RefereeForm
-      ],
-      formData: {},
-      currentIndex: 0,
       eventBus: new Vue({}),
+      currentIndex: 0,
+      forms: [
+        require("./PersonalInformationForm.vue").default,
+        require("./AcademicQualificationForm.vue").default,
+        require("./WorkExperienceForm.vue").default,
+        require("./ProfessionalCertificationForm.vue").default,
+        require("./ProfessionalMembershipForm.vue").default,
+        require("./SkillForm.vue").default,
+        require("./RefereeForm.vue").default
+      ]
     };
   },
   computed: {
-    currentForm() {
+    currentForm: function() {
       return this.forms[this.currentIndex];
     },
-    atEnd() {
+    atEnd: function() {
       return this.currentIndex === this.forms.length - 1;
     }
   },
   methods: {
-    nextForm(currentForm) {
-      this.formData[currentForm.formId] = currentForm.formData;
-      if (this.atEnd) {
-        this.submitCompleteForm();
-      } else {
-        this.currentIndex++;
-      }
-    },
-    async submitCompleteForm() {
-      try {
-        console.log(this.formData);
-        const response = await axios.post("api/create-profile", this.formData);
-        alert(JSON.stringify(response.data, undefined, 2));
-      } catch (error) {
-        console.log(error.response);
-      }
+    next: function() {
+      this.atEnd ? this.currentIndex = 0 : this.currentIndex++;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-
+#navigation .btn {
+  border-radius: 50%;
+}
 </style>
