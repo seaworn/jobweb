@@ -5,7 +5,7 @@
     <pre>formData: {{JSON.stringify(formData, null, 2)}}</pre>
     <!-- <pre>$v: {{$v}}</pre> -->
 
-      
+      <a href="/ProfileForm.vue" class="btn btn-primary">Profile</a>
     <form action="" method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">

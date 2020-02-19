@@ -3342,6 +3342,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "WorkExperienceForm",
   props: {
@@ -39886,6 +39887,12 @@ var render = function() {
     _c("pre", [
       _vm._v("formData: " + _vm._s(JSON.stringify(_vm.formData, null, 2)))
     ]),
+    _vm._v(" "),
+    _c(
+      "a",
+      { staticClass: "btn btn-primary", attrs: { href: "/ProfileForm.vue" } },
+      [_vm._v("Profile")]
+    ),
     _vm._v(" "),
     _c(
       "form",
