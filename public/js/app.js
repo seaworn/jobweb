@@ -4036,6 +4036,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+<<<<<<< HEAD
 //
 //
 //
@@ -4091,6 +4092,8 @@ var initialValues = {
   organization: "",
   roles: ""
 };
+=======
+>>>>>>> 4b55a3e2bfbc5648538a92479dccab318626bac7
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "WorkExperienceForm",
   props: {
@@ -40920,6 +40923,12 @@ var render = function() {
     _c("h3", { staticClass: "font-weight-bold" }, [_vm._v("Personal Details")]),
     _vm._v(" "),
     _c("hr", { staticClass: "my-2" }),
+    _vm._v(" "),
+    _c(
+      "a",
+      { staticClass: "btn btn-primary", attrs: { href: "/ProfileForm.vue" } },
+      [_vm._v("Profile")]
+    ),
     _vm._v(" "),
     _c(
       "form",
