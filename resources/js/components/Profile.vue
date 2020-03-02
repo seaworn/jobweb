@@ -56,6 +56,7 @@
       </div>
     </div>
   </div>
+<<<<<<< HEAD
 </template>
 <script>
 
@@ -91,3 +92,10 @@ export default {
   overflow-y: scroll;
 }
 </style>
+=======
+</div>
+
+</body>
+</html>
+
+>>>>>>> b4db1ac300152416e73de761d1ae0b844e5820ad
