@@ -1,40 +1,6 @@
 <template>
-  
   <div>
-    <h3 class="font-weight-bold">Work Experience</h3>
-    <hr class="my-2" />
-    <pre>values: {{JSON.stringify(values, null, 2)}}</pre>
-    <div class="justify-content-center">
-      <table class="table">
-        <thead class="font-weight-bold">
-          <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Position</th>
-            <th>Organization</th>
-            <th>Roles</th>
-            <th colspan="2">Action</th>
-          </tr>
-        </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.from}}</td>
-          <td>{{entry.to}}</td>
-          <td>{{entry.position}}</td>
-          <td>{{entry.organization}}</td>
-          <td>{{entry.roles}}</td>
-          <td>
-            <a href="#" @click="()=>editEntry(entry)">
-              <i class="fa fa-edit"></i>Edit
-            </a>
-            <a href="#" @click="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash"></i>Delete
-            </a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <form action method="POST" @submit.prevent="addEntry" novalidate>
+    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="from">From</label>
@@ -113,9 +79,6 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
-      <div class="d-flex flex-row-reverse">
-        <button type="button" class="btn btn-success" @click="$emit('next')">Next</button>
-      </div>
     </form>
   </div>
 </template>
@@ -123,22 +86,23 @@
 <script>
 const { required } = require("vuelidate/lib/validators");
 const { FormMixin } = require("./mixins");
-const initialValues = {
+
+const defaultValues = {
   from: "",
   to: "",
   position: "",
   organization: "",
   roles: ""
 };
+
 export default {
   name: "WorkExperienceForm",
   props: { eventBus: Vue },
   mixins: [FormMixin],
   data: function() {
     return {
-      values: { ...initialValues },
-      entries: [],
-      resourcePath: '/work-experience'
+      values: { ...this.initialValues || defaultValues },
+      resourcePrefix: "/work-experience"
     };
   },
   validations: {
@@ -149,29 +113,6 @@ export default {
       organization: { required },
       roles: { required }
     }
-  },
-  created: function() {
-    axios
-      .get(this.resourcePath)
-      .then(response => {console.log(response)})
-      .catch(error => {console.error(response)})
-  },
-  methods: {
-    addEntry: function() {
-      axios
-        .post(this.resourcePath, this.values)
-        .then(response => {})
-        .catch(error => {});
-      this.values = { ...initialValues };
-      this.$v.$reset();
-    },
-    deleteEntry: function(id) {
-      axios
-        .get(`${this.resourcePath}/${id}`)
-        .then(response => {console.log(response)})
-        .catch(error => {console.error(response)});
-    },
-    editEntry: function(entry) {}
   }
 };
 </script>

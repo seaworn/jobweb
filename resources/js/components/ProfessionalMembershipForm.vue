@@ -1,38 +1,5 @@
 <template>
   <div>
-    <h2 class="font-weight-bold">Professional Memberships</h2>
-    <hr class="my-2" />
-    <pre>values: {{JSON.stringify(values, null, 2)}}</pre>
-    <div class="justify-content-center">
-      <table class="table">
-        <thead class="font-weight-bold">
-          <tr>
-            <th>Professional Body</th>
-            <th>Registration Number</th>
-            <th>Membership Type</th>
-            <th>Registration Date</th>
-            <th>Expiry Date</th>
-            <th colspan="2">Action</th>
-          </tr>
-        </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.body}}</td>
-          <td>{{entry.regNo}}</td>
-          <td>{{entry.membershipType}}</td>
-          <td></td>
-          <td>{{entry.expiry}}</td>
-          <td>
-            <a href="#" @click.prevent="()=>editEntry(entry)">
-              <i class="fa fa-edit"></i>Edit
-            </a>
-            <a href="#" @click.prevent="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash"></i>Delete
-            </a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
     <form action method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-group">
         <label for="professionalBody">Professional Body</label>
@@ -42,11 +9,11 @@
           id="professionalBody"
           class="form-control"
           placeholder="e.g. Institution of Engineers of Kenya"
-          v-model="$v.values.professionalBody.$model"
-          :class="[validationClass('professionalBody')]"
+          v-model="$v.values.professional_body.$model"
+          :class="[validationClass('professional_body')]"
         />
         <div class="invalid-feedback">
-          <required-error :v="$v" path="professionalBody" />
+          <required-error :v="$v" path="professional_body" />
         </div>
       </div>
       <div class="form-group">
@@ -57,11 +24,11 @@
           id="regNo"
           class="form-control"
           placeholder="Registration number"
-          v-model="$v.values.regNo.$model"
-          :class="[validationClass('regNo')]"
+          v-model="$v.values.reg_no.$model"
+          :class="[validationClass('reg_no')]"
         />
         <div class="invalid-feedback">
-          <required-error :v="$v" path="regNo" />
+          <required-error :v="$v" path="reg_no" />
         </div>
       </div>
       <div class="form-group">
@@ -72,14 +39,29 @@
           id="membershipType"
           class="form-control"
           placeholder="e.g. Consultant"
-          v-model="$v.values.membershipType.$model"
-          :class="[validationClass('membershipType')]"
+          v-model="$v.values.membership_type.$model"
+          :class="[validationClass('membership_type')]"
         />
         <div class="invalid-feedback">
-          <required-error :v="$v" path="membershipType" />
+          <required-error :v="$v" path="membership_type" />
         </div>
       </div>
       <div class="form-row d-flex align-items-center">
+        <div class="form-group col-md-4">
+          <label for="registered_on">Registration Date</label>
+          <input
+            type="date"
+            name="registered_on"
+            id="registered_on"
+            class="form-control"
+            placeholder="MM/DD/YYYY"
+            v-model="$v.values.registered_on.$model"
+            :class="[validationClass('registered_on')]"
+          />
+          <div class="invalid-feedback">
+            <required-error :v="$v" path="registered_on.when" />
+          </div>
+        </div>
         <div class="form-group col-md-4" v-if="values.expires">
           <label for="expiry">Expiry</label>
           <input
@@ -109,9 +91,6 @@
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <div class="d-flex flex-row-reverse">
-      <button type="button" class="btn btn-success" @click="$emit('next')">Next</button>
-    </div>
   </div>
 </template>
 
@@ -119,10 +98,11 @@
 const { required, requiredIf } = require("vuelidate/lib/validators");
 const { FormMixin } = require("./mixins");
 
-const initialValues = {
-  professionalBody: "",
-  regNo: "",
-  membershipType: "",
+const defaultValues = {
+  professional_body: "",
+  reg_no: "",
+  membership_type: "",
+  registered_on: "",
   expires: true,
   expiry: ""
 };
@@ -133,45 +113,18 @@ export default {
   mixins: [FormMixin],
   data: function() {
     return {
-      values: { ...initialValues },
-      entries: [],
-      resourcePath: '/memberships'
+      values: { ...(this.initialValues || defaultValues) },
+      resourcePrefix: "/professional-memberships"
     };
   },
   validations: {
     values: {
-      professionalBody: { required },
-      regNo: { required },
-      membershipType: { required },
-      expiry: { requiredIf: requiredIf('expires') },
-    }
-  },
-  created: function() {
-    axios
-      .get(this.resourcePath)
-      .then(response => {})
-      .catch(error => {});
-  },
-  methods: {
-    handleSubmit: function() {
-      axios
-        .post(this.resourcePath, this.values)
-        .then(response => {})
-        .catch(error => {});
-      this.values = { ...initialValues };
-      this.$v.$reset();
-    },
-    editEntry: function(entry) {
-      axios
-        .put(`${this.resourcePath}/${entry.id}`)
-        .then(response => {})
-        .catch(error => {});
-    },
-    deleteEntry: function(id) {
-      axios
-        .delete(`${this.resourcePath}/${entry.id}`)
-        .then(response => {})
-        .catch(error => {});
+      professional_body: { required },
+      reg_no: { required },
+      membership_type: { required },
+      registered_on: { required },
+      expires: {},
+      expiry: { requiredIf: requiredIf("expires") }
     }
   }
 };

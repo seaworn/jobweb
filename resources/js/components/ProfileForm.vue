@@ -3,14 +3,17 @@
     <div id="navigation" class="d-flex justify-content-center my-4">
       <button
         type="button"
-        class="btn shadow mx-2"
+        class="btn shadow mx-2 rounded-circle"
         v-for="(_, idx) in forms"
         :key="idx"
         @click="currentIndex = idx"
         :class="[idx === currentIndex ? 'btn-success' : 'btn-secondary']"
       >{{idx + 1}}</button>
     </div>
-    <component :is="currentForm" :event-bus="eventBus" @next="next"/>
+    <component :is="currentForm" />
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="btn btn-success" @click="next">Next</button>
+    </div>
   </div>
 </template>
 
@@ -22,13 +25,14 @@ export default {
       eventBus: new Vue({}),
       currentIndex: 0,
       forms: [
-        require("./PersonalInformationForm.vue").default,
-        require("./AcademicQualificationForm.vue").default,
-        require("./WorkExperienceForm.vue").default,
-        require("./ProfessionalCertificationForm.vue").default,
-        require("./ProfessionalMembershipForm.vue").default,
-        require("./SkillForm.vue").default,
-        require("./RefereeForm.vue").default
+        require("./PersonalInformationForm").default,
+        require("./ContactPersonForm").default,
+        require("./AcademicQualificationForm").default,
+        require("./WorkExperienceForm").default,
+        require("./ProfessionalCertificationForm").default,
+        require("./ProfessionalMembershipForm").default,
+        require("./SkillForm").default,
+        require("./RefereeForm").default
       ]
     };
   },
@@ -42,14 +46,11 @@ export default {
   },
   methods: {
     next: function() {
-      this.atEnd ? this.currentIndex = 0 : this.currentIndex++;
+      this.atEnd ? (this.currentIndex = 0) : this.currentIndex++;
     }
   }
 };
 </script>
 
 <style scoped>
-#navigation .btn {
-  border-radius: 50%;
-}
 </style>

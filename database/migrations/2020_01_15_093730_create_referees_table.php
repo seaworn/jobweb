@@ -23,9 +23,9 @@ class CreateRefereesTable extends Migration
             $table->string('email')->nullable();
             $table->string('relationship');
             $table->string('length_of_relationship');
-            $table->timestamps();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

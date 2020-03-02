@@ -14,7 +14,7 @@ class WorkExperienceController extends Controller
      */
     public function index()
     {
-        return auth()->user()->work_experience;
+        return auth()->user()->workExperience;
     }
 
     /**
@@ -25,9 +25,16 @@ class WorkExperienceController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $wx = WorkExperience::create($input);
-        auth()->user()->work_experience()->save($wx);
+        $input = $request->validate([
+            'from' => '',
+            'to' => '',
+            'organization' => '',
+            'position' => '',
+            'roles' => ''
+        ]);
+        $wx = new WorkExperience($input);
+        auth()->user()->workExperience()->save($wx);
+        return ['experience' => $wx, 'message' => 'Saved successfully.'];
     }
 
     /**
@@ -61,6 +68,7 @@ class WorkExperienceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        WorkExperience::destroy($id);
+        return ['message' => 'Deleted successfully.'];
     }
 }

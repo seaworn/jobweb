@@ -14,7 +14,7 @@ class AcademicQualificationController extends Controller
      */
     public function index()
     {
-        return auth()->user()->academic_qualifications;
+        return auth()->user()->academicQualifications;
     }
 
     /**
@@ -25,26 +25,30 @@ class AcademicQualificationController extends Controller
      */
     public function store(Request $request)
     {
-        // $input = $request->validate([
-
-        // ]);
-        $input = $request->all();
-        $user = auth()->user();
-        $aq = new AcademicQualification();
-        $aq->institution = $input['institution'];
-        $aq->from = $input['from'];
-        $aq->to = $input['to'];
-        $aq->academic_level = $input['academicLevel'];
-        $aq->course = $input['course'];
-        $aq->specialization = $input['specialization'];
-        $aq->grade = $input['grade'];
-        $aq->user_id = $user->id;
-        $file = $request->file('file');
-        $path = $file->store('uploads');
-        $aq->file_path = $path;
-        $aq->save();
-
-        return ['aq'=> $aq, 'message'=> 'Saved succesfully.'];
+        $input = $request->validate([
+            'institution' => '',
+            'from' => '',
+            'to' => '',
+            'academic_level' => '',
+            'course' => '',
+            'specialization' => '',
+            'grade' => '',
+            'attachment' => ''
+        ]);
+        // return response()->json($input, 500);
+        $input = collect($input);
+        $aq = new AcademicQualification($input->only([
+            'institution',
+            'from',
+            'to',
+            'academic_level',
+            'course',
+            'specialization',
+            'grade'
+        ])->all());
+        $aq->file_path = $request->file('attachment')->store('uploads');
+        auth()->user()->academicQualifications()->save($aq);
+        return ['academicQualification'=> $aq, 'message'=> 'Saved succesfully.'];
     }
 
     /**
@@ -78,6 +82,7 @@ class AcademicQualificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        AcademicQualification::destroy($id);
+        return ['message' => 'Deleted successfully.'];
     }
 }

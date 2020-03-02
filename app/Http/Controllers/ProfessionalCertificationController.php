@@ -14,7 +14,7 @@ class ProfessionalCertificationController extends Controller
      */
     public function index()
     {
-        return auth()->user()->professional_certifications;
+        return auth()->user()->professionalCertifications;
     }
 
     /**
@@ -25,18 +25,26 @@ class ProfessionalCertificationController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $pc = new ProfessionalCertification();
-        $pc->certificate_name = $input['certificateName'];
-        $pc->issuing_body = $input['issuingBody'];
-        $pc->description = $input['description'];
-        $pc->issued_on = $input['issuedOn'];
-        $pc->expiry = $input['expires'] ? $input['expiry'] : null;
-        $file = $request->file('file');
-        $path = $file->store('uploads');
-        $pc->file_path = $path;
-        auth()->user()->professional_certifications()->save($pc);
-        return ['certificate'=> $pc, 'message'=> 'Saved successfully.'];
+        $input = $request->validate([
+            'certificate_name' => '',
+            'issuing_body' => '',
+            'description' => '',
+            'issued_on' => '',
+            'expires' => '',
+            'expiry' => '',
+            'attachment' => ''
+        ]);
+        $input = collect($input);
+        $pc = new ProfessionalCertification($input->only([
+            'certificate_name',
+            'issuing_body',
+            'description',
+            'issued_on',
+            'expiry'
+        ])->all());
+        $pc->file_path = $request->file('attachment')->store('uploads');
+        auth()->user()->professionalCertifications()->save($pc);
+        return ['certification'=> $pc, 'message'=> 'Saved successfully.'];
     }
 
     /**
@@ -70,6 +78,6 @@ class ProfessionalCertificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ProfessionalCertification::destroy($id);
     }
 }

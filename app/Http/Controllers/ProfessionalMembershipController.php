@@ -14,7 +14,7 @@ class ProfessionalMembershipController extends Controller
      */
     public function index()
     {
-        return auth()->user()->professional_memberships;
+        return auth()->user()->professionalMemberships;
     }
 
     /**
@@ -25,16 +25,14 @@ class ProfessionalMembershipController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $user = auth()->user();
-        $pm = new ProfessionalMembership();
-        $pm->professional_body = $input['professionalBody'];
-        $pm->reg_no = $input['regNo'];
-        $pm->membership_type = $input['membershipType'];
-        $pm->expiry = $input['expiry'];
-        $pm->user_id = $user->id;
-        $pm->save();
-
+        $input = $request->validate([
+            'professional_body' => '',
+            'reg_no' => '',
+            'membership_type' => '',
+            'expiry.expires' => '',
+            'expiry.when' => ''
+        ]);
+        $pm = ProfessionalMembership::create(array_merge($input, ['user_id' => auth()->user()->id]));
         return ['membership'=> $pm, 'message'=> 'Saved successfully.'];
     }
 
@@ -69,6 +67,7 @@ class ProfessionalMembershipController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ProfessionalMembership::destroy($id);
+        return ['message' => 'Deleted successfully.'];
     }
 }

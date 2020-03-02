@@ -69,7 +69,6 @@
         </div>
       </div>
     </div>
-    <!-- <pre>values: {{JSON.stringify(values, null, 2)}}</pre> -->
   </div>
 </template>
 
@@ -105,14 +104,15 @@ export default {
         .then(response => {
           // console.log(response);
           this.updateSession(response.data.session);
-          this.$router.push({
+          const next = this.$route.query.next || {
             name: "profile",
-            params: { username: response.data.session.username }
-          });
+            params: { username: response.data.session.user.username }
+          }
+          this.$router.push(next);
           this.$notify({ type: "success", text: response.data.message });
         })
         .catch(error => {
-          // console.error(error.response);
+          console.error(error.response);
           this.$notify({ type: "error", text: error.response.data.message });
         });
     }

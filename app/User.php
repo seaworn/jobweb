@@ -2,14 +2,15 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable, HasApiTokens, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -38,35 +39,60 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function personal_information() {
+    protected $appends = ['can', 'role'];
+
+    public function personalInformation() {
         return $this->hasOne(PersonalInformation::class);
     }
-
-    public function academic_qualifications() {
+    
+    public function academicQualifications() {
         return $this->hasMany(AcademicQualification::class);
     }
-
-    public function professional_certifications() {
+    
+    public function professionalCertifications() {
         return $this->hasMany(ProfessionalCertification::class);
     }
-
-    public function professional_memberships() {
+    
+    public function professionalMemberships() {
         return $this->hasMany(ProfessionalMembership::class);
     }
-
+    
     public function skills() {
-        return $this->belongsToMany(Skill::class);
+        return $this->belongsToMany(Skill::class, 'user_has_skills');
     }
-
-    public function work_experience() {
+    
+    public function workExperience() {
         return $this->hasMany(WorkExperience::class);
     }
-
-    public function contact_persons() {
-        return $this->hasMany(ContactPerson::class);
+    
+    public function contactPerson() {
+        return $this->hasOne(ContactPerson::class);
     }
-
+    
     public function referees() {
         return $this->hasMany(Referee::class);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
+    
+    public function getCanAttribute()
+    {
+        $permissions = [];
+        foreach ($this->permissions()->get() as $permission) {
+            $permissions[$permission->name] = true;
+        }
+        return $permissions;
+    }
+
+    public function getRoleAttribute()
+    {
+        $roles = [];
+        foreach ($this->roles()->get() as $role) {
+            $roles[$role->name] = true;
+        }
+        return $roles;
     }
 }

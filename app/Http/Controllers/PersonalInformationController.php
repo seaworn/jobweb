@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\PersonalInformation;
-use App\ContactPerson;
 
 class PersonalInformationController extends Controller
 {
@@ -15,7 +14,7 @@ class PersonalInformationController extends Controller
      */
     public function index()
     {
-        return ['info'=> auth()->user()->personal_information];
+        //
     }
 
     /**
@@ -26,42 +25,25 @@ class PersonalInformationController extends Controller
      */
     public function store(Request $request)
     {
-        // $input = $request->validate([
-        //     'firstName'=> 'required|alpha|min:2'
-        // ]);
-        $input = $request->all();
-        $user = auth()->user();
-
-        $pi = new PersonalInformation();
-        $pi->first_name = $input['firstName'];
-        $pi->middle_name = $input['middleName'];
-        $pi->other_names = $input['otherNames'];
-        $pi->dob = $input['dob'];
-        $pi->gender = $input['gender'];
-        $pi->nationality = $input['nationality'];
-        $pi->county =  $input['county'];
-        $pi->sub_county = $input['subCounty'];
-        $pi->address = $input['address'];
-        $pi->phone_no = $input['phoneNo'];
-        $pi->disability = $input['disability']['has'] ? $input['disability']['details'] : null;
-        $pi->criminal_record = $input['criminalRecord']['has'] ? $input['criminalRecord']['details'] : null;
-        $pi->user_id = $user->id;
-        $pi->save();
-
-        $cp = new ContactPerson();
-        $cpi = $input['contactPerson'];
-        $cp->first_name = $cpi['firstName'];
-        $cp->middle_name = $cpi['middleName'];
-        $cp->other_names = $cpi['otherNames'];
-        $cp->phone_no = $cpi['phoneNo'];
-        $cp->email = $cpi['email'];
-        $cp->user_id = $user->id;
-        $cp->save();
-
-        return [
-            'personal_info'=> ['personal'=> $pi, 'contact_person'=> $cpi],
-            'message'=> 'Saved successfuly.'
-        ];
+        $this->authorize('create', PersonalInformation::class);
+        $input = $request->validate([
+            'first_name'=> '',
+            'middle_name' => '',
+            'other_names' => '',
+            'dob' => '',
+            'gender' => '',
+            'nationality' => '',
+            'county' => '',
+            'sub_county' => '',
+            'address' => '',
+            'phone_no' => '',
+            'disability' => '',
+            'criminal_record' => ''
+        ]);
+        // return response()->json(collect($input), 500);
+        $pi = new PersonalInformation($input);
+        auth()->user()->personalInformation()->save($pi);
+        return ['message'=> 'Saved successfuly.'];
     }
 
     /**
@@ -70,9 +52,11 @@ class PersonalInformationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($username)
     {
-        //
+        $pi = auth()->user()->personalInformation;
+        $this->authorize('view', $pi);
+        return $pi;
     }
 
     /**
@@ -84,7 +68,9 @@ class PersonalInformationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->authorize('update', $id);
+        PersonalInformation::whereId($id)->update($request->all());
+        return ['message'=> 'Updated successfully.'];
     }
 
     /**

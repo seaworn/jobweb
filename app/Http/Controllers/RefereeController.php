@@ -25,19 +25,17 @@ class RefereeController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        $ref = new Referee();
-        $ref->first_name = $input['firstName'];
-        $ref->middle_name = $input['middleName'];
-        $ref->other_names = $input['otherNames'];
-        $ref->occupation = $input['occupation'];
-        $ref->email = $input['email'];
-        $ref->phone_no = $input['phoneNo'];
-        $ref->relationship = $input['relationship'];
-        $ref->lenght_of_relationship = $input['lengthOfRelationship'];
-        $ref->user_id = $user->id;
-        auth()->user()->referees()->save($ref);
-
+        $input = $request->validate([
+            'first_name' => '',
+            'middle_name' => '',
+            'other_names' => '',
+            'occupation' => '',
+            'email' => '',
+            'phone_no' => '',
+            'relationship' => '',
+            'length_of_relationship' => ''
+        ]);
+        $ref = Referee::create(array_merge($input, ['user_id' => auth()->user()->id]));
         return ['referee'=> $ref, 'message'=> 'Saved successfully.'];
     }
 
@@ -72,6 +70,7 @@ class RefereeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Referee::destroy($id);
+        return ['message' => 'Deleted successfully.'];
     }
 }

@@ -1,43 +1,5 @@
 <template>
   <div>
-    <h3 class="font-weight-bold">Referees</h3>
-    <hr class="my-2" />
-    <pre>values: {{JSON.stringify(values, null, 2)}}</pre>
-    <!-- <pre>$v: {{JSON.stringify($v, null, 2)}}</pre> -->
-    <div class="justify-content-center">
-      <table class="table">
-        <thead class="font-weight-bold">
-          <tr>
-            <th>Full Name</th>
-            <th>Organization</th>
-            <th>Address</th>
-            <th>Phone Number</th>
-            <th>Email Address</th>
-            <th>Relationship</th>
-            <th>Length of Relationship</th>
-            <th colspan="2">Action</th>
-          </tr>
-        </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{`${entry.firstName} ${entry.middleName} ${entry.otherName}`}}</td>
-          <td>{{entry.organization}}</td>
-          <td>{{entry.address}}</td>
-          <td>{{entry.phoneNo}}</td>
-          <td>{{entry.email}}</td>
-          <td>{{entry.relationship}}</td>
-          <td>{{entry.lengthOfRelationship}}</td>
-          <td>
-            <a href="#" @click.prevent="()=>editEntry(entry.id)">
-              <i class="fa fa-edit"></i>Edit
-            </a>
-            <a href="#" @click.prevent="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash"></i>Delete
-            </a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
     <form action method="POST" @submit.prevent="handleSubmit" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
@@ -48,10 +10,10 @@
             id="firstName"
             class="form-control"
             placeholder="First Name"
-            v-model="$v.values.firstName.$model"
-            :class="[validationClass('firstName')]"
+            v-model="$v.values.first_name.$model"
+            :class="[validationClass('first_name')]"
           />
-          <name-error path="firstName" :v="$v" />
+          <name-error path="first_name" :v="$v" />
         </div>
         <div class="form-group col-md-4">
           <label for="middleName">Middle Name</label>
@@ -61,9 +23,10 @@
             id="middleName"
             class="form-control"
             placeholder="Middle Name"
-            v-model="$v.values.middleName.$model"
+            v-model="$v.values.middle_name.$model"
+            :class="[validationClass('middle_name')]"
           />
-          <name-error path="middleName" :v="$v" />
+          <name-error path="middle_name" :v="$v" />
         </div>
         <div class="form-group col-md-4">
           <label for="otherNames">Other Name</label>
@@ -73,40 +36,30 @@
             id="otherNames"
             class="form-control"
             placeholder="Other Name"
-            v-model="$v.values.otherNames.$model"
+            v-model="$v.values.other_names.$model"
+            :class="[validationClass('other_names')]"
           />
-          <name-error path="otherNames" :v="$v" />
+          <name-error path="other_names" :v="$v" />
         </div>
       </div>
       <div class="form-group">
-        <label for="organization">Organization</label>
+        <label for="occupation">Occupation</label>
         <input
           type="text"
-          name="organization"
-          id="organization"
+          name="occupation"
+          id="occupation"
           class="form-control"
-          placeholder="e.g. JobWeb"
-          v-model="$v.values.organization.$model"
+          placeholder="e.g. Religious Leader"
+          v-model="$v.values.occupation.$model"
+          :class="[validationClass('occupation')]"
         />
         <div class="invalid-feedback">
-          <required-error path="organization" :v="$v" />
-          <alphanum-error path="organization" :v="$v" />
+          <required-error path="occupation" :v="$v" />
+          <alphanum-error path="occupation" :v="$v" />
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="address">Address</label>
-          <input
-            type="date"
-            name="address"
-            id="address"
-            class="form-control"
-            placeholder="e.g. 010-00100, Nairobi"
-            v-model="$v.values.address.$model"
-          />
-          <required-error path="address" :v="$v" />
-        </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="phoneNo">Phone Number</label>
           <input
             type="telephone"
@@ -114,11 +67,12 @@
             id="phoneNo"
             class="form-control"
             placeholder="e.g. 07********"
-            v-model="$v.values.phoneNo.$model"
+            v-model="$v.values.phone_no.$model"
+            :class="[validationClass('phone_no')]"
           />
-          <phone-no-error path="phoneNo" :v="$v" />
+          <phone-no-error path="phone_no" :v="$v" />
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label for="email">Email</label>
           <input
             type="email"
@@ -127,6 +81,7 @@
             class="form-control"
             placeholder="e.g. name@example.com"
             v-model="$v.values.email.$model"
+            :class="[validationClass('email')]"
           />
           <email-error path="email" :v="$v" />
         </div>
@@ -141,6 +96,7 @@
             class="form-control"
             placeholder="e.g. Supervisor"
             v-model="$v.values.relationship.$model"
+            :class="[validationClass('relationship')]"
           />
           <div class="invalid-feedback">
             <required-error path="relationship" :v="$v" />
@@ -155,16 +111,14 @@
             id="lengthOfRelationship"
             class="form-control"
             placeholder="e.g. 3 Years"
-            v-model="$v.values.lengthOfRelationship.$model"
+            v-model="$v.values.length_of_relationship.$model"
+            :class="[validationClass('length_of_relationship')]"
           />
-          <alphnum-error path="lengthOfRelationship" :v="$v" />
+          <alphanum-error path="length_of_relationship" :v="$v" />
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <div class="d-flex flex-row-reverse">
-      <button type="button" class="btn btn-success" @click="$emit('next')">Next</button>
-    </div>
   </div>
 </template>
 
@@ -176,22 +130,19 @@ const {
   alphaNum,
   email,
   minLength,
-  maxLength,
-  minValue,
-  maxValue
+  maxLength
 } = require("vuelidate/lib/validators");
 const { FormMixin } = require("./mixins");
 
-const initialValues = {
-  firstName: "",
-  middleName: "",
-  otherNames: "",
-  organization: "",
-  address: "",
-  phoneNo: "",
+const defaultValues = {
+  first_name: "",
+  middle_name: "",
+  other_names: "",
+  occupation: "",
+  phone_no: "",
   email: "",
   relationship: "",
-  lengthOfRelationship: ""
+  length_of_relationship: ""
 };
 
 export default {
@@ -200,46 +151,26 @@ export default {
   mixins: [FormMixin],
   data: function() {
     return {
-      values: { ...initialValues },
-      entries: [],
-      resourcePath: '/referees'
+      values: { ...this.initialValues || defaultValues },
+      resourcePrefix: "/referees"
     };
   },
   validations: {
     values: {
-      firstName: { required, alpha, minLength: minLength(2) },
-      middleName: { required, alpha, minLength: minLength(2) },
-      otherNames: { required, alpha, minLength: minLength(2) },
-      organization: { required, alphaNum },
-      address: { alphaNum },
-      phoneNo: {
+      first_name: { required, alpha, minLength: minLength(2) },
+      middle_name: { required, alpha, minLength: minLength(2) },
+      other_names: { required, alpha, minLength: minLength(2) },
+      occupation: { required, alphaNum },
+      phone_no: {
         required,
         numeric,
-        minValue: minValue(10),
-        maxValue: maxValue(10)
+        minLength: minLength(10),
+        maxLength: maxLength(10)
       },
       email: { required, email },
       relationship: { required, alpha },
-      lengthOfRelationship: { required, alphaNum }
+      length_of_relationship: { required, alphaNum }
     }
-  },
-  created() {
-    axios
-      .get(this.resourcePath)
-      .then(respnse => {console.log(response)})
-      .catch(error => {console.error(response)});
-  },
-  methods: {
-    handleSubmit: function() {
-      axios
-        .post(this.resourcePath, this.values)
-        .then(response => {console.log(response)})
-        .catch(error => {console.error(response)});
-      this.values = { ...initialValues };
-      this.$v.$reset();
-    },
-    editEntry: function(entry) {},
-    deleteEntry: function(id) {}
   }
 };
 </script>

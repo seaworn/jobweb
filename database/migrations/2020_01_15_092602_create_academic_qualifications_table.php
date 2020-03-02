@@ -15,8 +15,8 @@ class CreateAcademicQualificationsTable extends Migration
     {
         Schema::create('academic_qualifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->datetime('from');
-            $table->datetime('to');
+            $table->date('from');
+            $table->date('to');
             $table->string('institution');
             $table->string('academic_level');
             $table->string('course');
@@ -25,7 +25,7 @@ class CreateAcademicQualificationsTable extends Migration
             $table->string('file_path');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

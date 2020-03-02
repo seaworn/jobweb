@@ -1,39 +1,13 @@
 <template>
   <div>
-    <h3 class="font-weight-bold">Professional Certifications</h3>
-    <hr class="my-2" />
-    <pre>values: {{JSON.stringify(values, null, 2)}}</pre>
-    <div class="justify-content-center">
-      <table class="table">
-        <thead class="font-weight-bold">
-          <tr>
-            <th>Certificate Name</th>
-            <th>Issuing Body</th>
-            <th>Description</th>
-            <th>Year</th>
-            <th>expiry</th>
-            <th colspan="2">Action</th>
-          </tr>
-        </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.certificateName}}</td>
-          <td>{{entry.issuingBody}}</td>
-          <td>{{entry.description}}</td>
-          <td>{{entry.year}}</td>
-          <td>{{entry.expiry}}</td>
-          <td>
-            <a href="#" @click.prevent="()=>editEntry(entry)">
-              <i class="fa fa-edit"></i>Edit
-            </a>
-            <a href="#" @click.prevent="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash"></i>Delete
-            </a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate enctype="multipart/form-data">
+    <h4 class="font-weight-bold">Professional Certifications</h4>
+    <form
+      action
+      method="POST"
+      @submit.prevent="handleSubmit"
+      novalidate
+      enctype="multipart/form-data"
+    >
       <div class="form-group">
         <label for="certificateName">Certificate Name</label>
         <input
@@ -42,11 +16,11 @@
           id="certificateName"
           class="form-control"
           placeholder="e.g. CCNA"
-          v-model="$v.values.certificateName.$model"
-          :class="[validationClass('certificateName')]"
+          v-model="$v.values.certificate_name.$model"
+          :class="[validationClass('certificate_name')]"
         />
         <div class="invalid-feedback">
-          <required-error :v="$v" path="certificateName" />
+          <required-error :v="$v" path="certificate_name" />
         </div>
       </div>
       <div class="form-group">
@@ -57,11 +31,11 @@
           id="issuingBody"
           class="form-control"
           placeholder="e.g. Cisco"
-          v-model="$v.values.issuingBody.$model"
-          :class="[validationClass('issuingBody')]"
+          v-model="$v.values.issuing_body.$model"
+          :class="[validationClass('issuing_body')]"
         />
         <div class="invalid-feedback">
-          <required-error :v="$v" path="issuingBody" />
+          <required-error :v="$v" path="issuing_body" />
         </div>
       </div>
       <div class="form-group">
@@ -86,11 +60,11 @@
             id="issuedOn"
             class="form-control"
             placeholder="MM/DD/YYYY"
-            v-model="$v.values.issuedOn.$model"
-            :class="[validationClass('issuedOn')]"
+            v-model="$v.values.issued_on.$model"
+            :class="[validationClass('issued_on')]"
           />
           <div class="invalid-feedback">
-            <required-error :v="$v" path="issuedOn" />
+            <required-error :v="$v" path="issued_on" />
           </div>
         </div>
         <div class="form-group col-md-4" v-if="values.expires">
@@ -121,13 +95,13 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="file">Attach Copy</label>
+        <label for="attachment">Attach Copy</label>
         <input
           type="file"
-          name="file"
-          id="file"
+          name="attachment"
+          id="attachment"
           class="form-control-file"
-          @change="file = $event.target.files[0]"
+          @change="values.attachment = $event.target.files[0]"
         />
         <div class="invalid-feedback">
           <!-- <required-error :v="$v" path="file" /> -->
@@ -135,71 +109,45 @@
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <div class="d-flex flex-row-reverse">
-      <button type="button" class="btn btn-success" @click="$emit('next')">Next</button>
-    </div>
   </div>
 </template>
 
 <script>
 const { required, requiredIf } = require("vuelidate/lib/validators");
 const { FormMixin } = require("./mixins");
+const ProfessionalCertifications = require("./ProfessionalCertifications")
+  .default;
 
-const initialValues = {
-  certificateName: "",
-  issuingBody: "",
+const defaultValues = {
+  certificate_name: "",
+  issuing_body: "",
   description: "",
-  issuedOn: "",
+  issued_on: "",
   expires: true,
   expiry: "",
-  file: null
+  attachment: null
 };
 
 export default {
   name: "ProfessionalCertificationForm",
   props: { eventBus: Vue },
   mixins: [FormMixin],
-  data: function() {
+  components: { ProfessionalCertifications },
+  data() {
     return {
-      values: { ...initialValues },
-      entries: [],
-      resourcePath: "/professional-certifications"
+      values: { ...(this.initialValues || defaultValues) },
+      resourcePrefix: "/professional-certifications"
     };
   },
   validations: {
     values: {
-      certificateName: { required },
-      issuingBody: { required },
+      certificate_name: { required },
+      issuing_body: { required },
       description: {},
-      issuedOn: { required },
+      issued_on: { required },
+      expires: {},
       expiry: { requiredIfExpires: requiredIf("expires") }
     }
-  },
-  created: function() {
-    axios
-      .get(this.resourcePath)
-      .then(response => {})
-      .catch(error => {});
-  },
-  methods: {
-    handleSubmit: function() {
-      const fd = new FormData();
-      const data = Object.keys(this.values).map(key => fd.append(key, this.values[key]));
-      axios
-        .post(this.resourcePath, fd, {headers: {'Content-Type': 'multipart/form-data'}})
-        .then(response => {
-          // console.log(response);
-          this.$notify({type: 'success', text: response.data.message});
-        })
-        .catch(error => {
-          // console.log(error.response);
-          this.$notify({type: 'error', text: error.response.data.message});
-        });
-      this.values = { ...initialValues };
-      this.$v.$reset();
-    },
-    editEntry: function() {},
-    deleteEntry: function() {}
   }
 };
 </script>

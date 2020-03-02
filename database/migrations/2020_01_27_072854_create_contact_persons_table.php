@@ -20,9 +20,9 @@ class CreateContactPersonsTable extends Migration
             $table->string('other_names')->nullable();
             $table->string('phone_no');
             $table->string('email')->nullable();
-            $table->timestamps();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
