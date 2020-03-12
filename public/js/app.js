@@ -5303,7 +5303,7 @@ var defaultValues = {
     "values.grant_all_permissions": function valuesGrant_all_permissions() {
       if (this.$refs.grantAll.checked === true) {
         this.values.permissions = _toConsumableArray(this.permissions);
-      } else if (currentRole) {
+      } else if (this.currentRole) {
         this.values.permissions = this.filterAssignedPermissions(this.currentRole);
       } else {
         this.values.permissions = [];
@@ -10511,7 +10511,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#spy[data-v-3bd692e4] {\n  position: relative;\n  height: 100vh;\n  overflow-y: scroll;\n}\n", ""]);
+exports.push([module.i, "\n#spy[data-v-3bd692e4] {\r\n  position: relative;\r\n  height: 100vh;\r\n  overflow-y: scroll;\n}\r\n", ""]);
 
 // exports
 
@@ -70555,8 +70555,8 @@ var CRUDMixin = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/enwawerueli/workspace/jobweb/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/enwawerueli/workspace/jobweb/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\jobweb\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\jobweb\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

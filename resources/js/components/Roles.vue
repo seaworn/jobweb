@@ -212,7 +212,7 @@ export default {
     "values.grant_all_permissions": function() {
       if (this.$refs.grantAll.checked === true) {
         this.values.permissions = [...this.permissions];
-      } else if (currentRole) {
+      } else if (this.currentRole) {
         this.values.permissions = this.filterAssignedPermissions(this.currentRole);
       } else {
         this.values.permissions = [];
