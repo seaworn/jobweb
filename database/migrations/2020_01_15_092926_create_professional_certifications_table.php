@@ -20,7 +20,7 @@ class CreateProfessionalCertificationsTable extends Migration
             $table->text('description');
             $table->date('issued_on');
             $table->date('expiry')->nullable();
-            $table->string('file_path');
+            $table->string('attachment_filepath');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-header">Login</div>
         <div class="card-body">
-          <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+          <form action method="POST" @submit.prevent="login" novalidate>
             <div class="form-group row">
               <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Adress</label>
               <div class="col-md-6">
@@ -75,8 +75,8 @@
 <script>
 const { required, email } = require("vuelidate/lib/validators");
 const { mapMutations } = require("vuex");
-const { FormMixin } = require("./mixins");
-const initialValues = {
+const { FormValidationMixin } = require("./mixins");
+const defaultValues = {
   email: "",
   password: "",
   remember: false
@@ -84,10 +84,10 @@ const initialValues = {
 
 export default {
   name: "LoginForm",
-  mixins: [FormMixin],
-  data: function() {
+  mixins: [FormValidationMixin],
+  data() {
     return {
-      values: { ...initialValues }
+      values: { ...defaultValues }
     };
   },
   validations: {
@@ -98,21 +98,16 @@ export default {
   },
   methods: {
     ...mapMutations(["updateSession"]),
-    handleSubmit: function() {
+    login() {
       axios
         .post("/login", this.values)
         .then(response => {
           // console.log(response);
           this.updateSession(response.data.session);
-          const next = this.$route.query.next || {
-            name: "profile",
-            params: { username: response.data.session.user.username }
-          }
-          this.$router.push(next);
           this.$notify({ type: "success", text: response.data.message });
         })
         .catch(error => {
-          console.error(error.response);
+          // console.error(error.response);
           this.$notify({ type: "error", text: error.response.data.message });
         });
     }

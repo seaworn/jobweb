@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\{Role, Permission};
 
 class User extends Authenticatable
 {
@@ -39,7 +40,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['can', 'role'];
+    protected $appends = ['can', 'givenRole'];
 
     public function personalInformation() {
         return $this->hasOne(PersonalInformation::class);
@@ -81,18 +82,23 @@ class User extends Authenticatable
     public function getCanAttribute()
     {
         $permissions = [];
-        foreach ($this->permissions()->get() as $permission) {
-            $permissions[$permission->name] = true;
+        foreach (Permission::get() as $permission) {
+            $permissions[$permission->name] = $this->hasPermissionTo($permission);
         }
         return $permissions;
     }
 
-    public function getRoleAttribute()
+    public function getGivenRoleAttribute()
     {
         $roles = [];
-        foreach ($this->roles()->get() as $role) {
-            $roles[$role->name] = true;
+        foreach (Role::get() as $role) {
+            $roles[$role->name] = $this->hasRole($role);
         }
         return $roles;
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Job::class, 'applications');
     }
 }

@@ -1,48 +1,51 @@
 <template>
-  <div>
-    <h4 class="font-weight-bold">Skills</h4>
-    <div class="d-flex flex-wrap">
-      <div class="d-flex shadow p-2 m-1" v-for="entry in entries" :key="entry.id">
-        <span>{{entry.skill}}</span>&nbsp;
-        <button
-          type="button"
-          class="close"
-          aria-label="Dismiss"
-          @click="()=>deleteEntry(entry.id)"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+  <div class="d-flex flex-wrap" v-if="skills.length">
+    <div class="rounded-pill border shadow-sm p-1 pl-3 my-1 mr-2" v-for="skill in skills" :key="skill.id">
+      <span>{{skill.name}}</span>&nbsp;
+      <button type="button" class="btn rounded-circle xbtn" aria-label="Dismiss" @click="deleteSkill(skill.id)">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div v-if="showForm">
-      <skill-form />
-    </div>
-    <button type="button" class="btn btn-primary" @click="showForm = true" v-if="!showForm">Add</button>
   </div>
 </template>
 
 <script>
-const SkillForm = require("./SkillForm").default;
-const { ViewMixin } = require("./mixins");
-
 export default {
-  components: { SkillForm },
-  mixins: [ViewMixin],
+  name: "Skills",
   data() {
     return {
-      entries: [],
-      resourcePrefix: '/skills'
+      skills: [],
+      resourcePath: "/skills"
     };
   },
+  created() {
+    this.$root.$on('skill-added', skill => {
+      this.skills.push(skill);
+    });
+    axios
+      .get(this.resourcePath)
+      .then(response => {
+        // console.log(response);
+        this.skills = response.data;
+      })
+      .catch(error => {
+        // console.log(error.response);
+      });
+  },
   methods: {
-    deleteEntry: function(id) {
+    deleteSkill(id) {
       axios
-        .delete(`${this.resourcePrefix}/${id}`)
+        .delete(`${this.resourcePath}/${id}`)
         .then(response => {
-          this.entries = response.data;
+          // console.log(response);
+          this.skills = this.skills.filter(skill => {
+            return skill.id !== id;
+          });
+          this.$notify({ type: "success", text: response.data.message });
         })
         .catch(error => {
-          console.log(error.response);
+          // console.error(error.response);
+          this.$notify({ type: "error", text: response.data.message });
         });
     }
   }

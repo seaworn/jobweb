@@ -1,59 +1,61 @@
 <template>
-  <div>
-    <h4 class="font-weight-bold">Professional Memberships</h4>
+  <div v-if="memberships.length">
     <div class="justify-content-center">
       <table class="table">
-        <thead class="font-weight-bold">
+        <thead class="thead-light font-weight-bold">
           <tr>
             <th>Professional Body</th>
             <th>Registration Number</th>
             <th>Membership Type</th>
             <th>Registration Date</th>
             <th>Expiry Date</th>
-            <th colspan="2">Action</th>
+            <th colspan="2" v-if="showActions">Action</th>
           </tr>
         </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.professional_body}}</td>
-          <td>{{entry.reg_no}}</td>
-          <td>{{entry.membership_type}}</td>
+        <tr v-for="membership in memberships" :key="membership.id">
+          <td>{{membership.professional_body}}</td>
+          <td>{{membership.reg_no}}</td>
+          <td>{{membership.membership_type}}</td>
           <td></td>
-          <td>{{entry.expiry}}</td>
-          <td>
-            <button class="btn text-primary" @click="showForm = true; entryToEdit = entry">
-              <i class="fa fa-edit" />&nbsp;Edit
-            </button>
-            <button class="btn text-danger" @click="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash" />&nbsp;Delete
-            </button>
+          <td>{{membership.expiry}}</td>
+          <td v-if="showActions">
+            <div class="btn-group" role="group" aria-label>
+              <button class="btn text-primary" @click="$emit('edit-membership', membership.id)">
+                <i class="fa fa-edit" />&nbsp;Edit
+              </button>
+              <button class="btn text-danger" @click="deleteMembership(membership.id)">
+                <i class="fa fa-trash" />&nbsp;Delete
+              </button>
+            </div>
           </td>
         </tr>
       </table>
     </div>
-    <div v-if="showForm">
-      <professional-membership-form :initial-values="entryToEdit" />
-    </div>
-    <button class="btn btn-primary" @click="showForm = true" v-if="!showForm">Add</button>
   </div>
 </template>
 
 <script>
-const {
-  default: ProfessionalMembershipForm
-} = require("./ProfessionalMembershipForm");
-const { ViewMixin } = require("./mixins");
-
 export default {
-  components: { ProfessionalMembershipForm },
-  mixins: [ViewMixin],
+  name: "ProfessionalMemberships",
+  props: { showActions: { type: Boolean, default: true } },
   data() {
     return {
-      resourcePrefix: "/professional-memberships"
+      memberships: [],
+      resourcePath: "/professional-memberships"
     };
   },
   created() {
-    this.$on("pm-saved", function() {
-      this.showForm = false;
+    axios
+      .get(this.resourcePath)
+      .then(response => {
+        //console.log(response);
+        this.memberships = response.data;
+      })
+      .catch(error => {
+        //console.error(error.response);
+      });
+    this.$root.$on("membership-added", membership => {
+      this.memberships.push(membership);
     });
   }
 };

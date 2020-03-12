@@ -1,140 +1,131 @@
-const {
-    getProperty
-} = require('../utils');
-
 export const ValidationOptionsMixin = {
-    props: {
-        v: {
-            type: Object,
-            required: true
-        },
-        path: {
-            type: String,
-            required: true
-        }
+  props: {
+    v: {
+      type: Object,
+      required: true
     },
-    computed: {
-        field: function () {
-            return getProperty(this.path, this.v.values);
-        }
+    path: {
+      type: String,
+      required: true
     }
+  },
+  computed: {
+    field() {
+      return _.get(this.v.values, this.path);
+    }
+  }
 }
 
 const {
+  RequiredError,
+  AlphaError,
+  AlphanumError,
+  MinlengthError,
+  EmailError,
+  NameError,
+  PhoneNoError
+} = require("./mixed");
+
+export const FormValidationMixin = {
+  components: {
     RequiredError,
     AlphaError,
     AlphanumError,
     MinlengthError,
-    EmailError,
     NameError,
+    EmailError,
     PhoneNoError
-} = require("./mixed");
-
-export const FormMixin = {
-    props: {
-        initialValues: Object
-    },
-    components: {
-        RequiredError,
-        AlphaError,
-        AlphanumError,
-        MinlengthError,
-        NameError,
-        EmailError,
-        PhoneNoError
-    },
-    data: function () {
-        return {
-            values: {},
-            editing: this.initialValues ? true : false,
-            creating: this.initialValues ? false : true,
-            resourceId: this.initialValues ? this.initialValues.id : null,
-            resourcePrefix: '/',
-        }
-    },
-    computed: {
-        requestMethod() {
-            return this.editing ? "PUT" : "POST";
-        }
-    },
-    watch: {
-        editing(value) {
-            this.creating = !value;
-        },
-        creating(value) {
-            this.editing = !value;
-        }
-    },
-    methods: {
-        validationClass: function (path) {
-            const field = getProperty(path, this.$v.values);
-            return field.$dirty ? (field.$invalid ? 'is-invalid' : 'is-valid') : '';
-        },
-        handleSubmit: function () {
-            const formData = new FormData();
-            Object.keys(this.values).map(key => formData.append(key, this.values[key]));
-            axios({
-                    method: this.requestMethod,
-                    url: `${this.resourcePrefix}/${this.resourceId || ''}`,
-                    data: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    console.log(response);
-                    this.$notify({
-                        type: 'success',
-                        text: response.data.message
-                    });
-                    // this.$v.reset();
-                    this.$emit('saved');
-                })
-                .catch(error => {
-                    console.error(error.response);
-                    this.$notify({
-                        type: 'error',
-                        text: error.response.data.message
-                    });
-                });
-        }
+  },
+  methods: {
+    validationClass(path) {
+      const field = _.get(this.$v.values, path);
+      return field.$dirty ? (field.$invalid ? 'is-invalid' : 'is-valid') : '';
     }
+  }
 }
 
-export const ViewMixin = {
-    data: function () {
-        return {
-            entries: [],
-            showForm: false,
-            entryToEdit: null,
-            resourcePrefix: "/"
-        };
+export const CRUDMixin = {
+  created() {
+    const req = ['defaultValues', 'values', 'resourceName', 'resourcePath'];
+    const undef = req.find(prop => this[prop] === undefined);
+    if (undef) throw new Error(`Property '${undef}' is undefined.`);
+    axios
+      .get(this.resourcePath)
+      .then(response => {
+        // console.log(response);
+        this[this.resourceName.collection] = response.data;
+      })
+      .catch(error => {
+        // console.error(error.response);
+      });
+  },
+  methods: {
+    handleSubmit() {
+      (this.values.id ? this.update : this.create)();
     },
-    created: function () {
-        axios
-            .get(this.resourcePrefix)
-            .then(response => {
-                // console.log(response);
-                this.entries = response.data;
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
+    create() {
+      axios
+        .post(this.resourcePath, this.values)
+        .then(response => {
+          // console.log(response);
+          this[this.resourceName.collection].push(response.data[this.resourceName.single]);
+          this.$notify({
+            type: "success",
+            text: response.data.message
+          });
+        })
+        .catch(error => {
+          console.error(error.response);
+          this.$notify({
+            type: "error",
+            text: error.response.data.message
+          });
+        });
     },
-    methods: {
-        deleteEntry(id) {
-            axios
-                .delete(`${this.resourcePrefix}/${id}`)
-                .then(response => {
-                    // console.log(response);
-                    this.$notify({
-                        type: 'info',
-                        text: response.data.message
-                    });
-                })
-                .catch(error => {
-                    console.log(error.response);
-                });
-        }
+    update() {
+      axios
+        .patch(`${this.resourcePath}/${this.values.id}`, this.values)
+        .then(response => {
+          // console.log(response);
+          const updated = response.data[this.resourceName.single];
+          const idx = this[this.resourceName.collection].findIndex(res => res.id === updated.id);
+          this[this.resourceName.collection].splice(idx, 1, updated);
+          this.$notify({
+            type: "success",
+            text: response.data.message
+          });
+        })
+        .catch(error => {
+          console.error(error.response);
+          this.$notify({
+            type: "error",
+            text: error.response.data.message
+          });
+        });
+    },
+    delete_(res) {
+      axios
+        .delete(`${this.resourcePath}/${resource.id}`)
+        .then(response => {
+          // console.log(response);
+          const idx = this[this.resourceName.collection].indexOf(res);
+          this[this.resourceName.collection].splice(idx, 1);
+          this.$notify({
+            type: "success",
+            text: response.data.message
+          });
+        })
+        .catch(error => {
+          console.error(error.response);
+          this.$notify({
+            type: "error",
+            text: error.response.data.message
+          });
+        });
+    },
+    reset() {
+      this.values = _.cloneDeep(this.defaultValues);
+      if (this.$v) this.$v.$reset();
     }
+  }
 }

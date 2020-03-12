@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\PersonalInformation;
+use App\{PersonalInformation, User};
 
 class PersonalInformationController extends Controller
 {
@@ -25,7 +25,7 @@ class PersonalInformationController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', PersonalInformation::class);
+        // $this->authorize('create', PersonalInformation::class);
         $input = $request->validate([
             'first_name'=> '',
             'middle_name' => '',
@@ -40,7 +40,6 @@ class PersonalInformationController extends Controller
             'disability' => '',
             'criminal_record' => ''
         ]);
-        // return response()->json(collect($input), 500);
         $pi = new PersonalInformation($input);
         auth()->user()->personalInformation()->save($pi);
         return ['message'=> 'Saved successfuly.'];
@@ -52,11 +51,10 @@ class PersonalInformationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($username)
+    public function show(User $user)
     {
-        $pi = auth()->user()->personalInformation;
-        $this->authorize('view', $pi);
-        return $pi;
+        // $this->authorize('view');
+        return auth()->user()->personalInformation;
     }
 
     /**
@@ -68,7 +66,7 @@ class PersonalInformationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('update', $id);
+        // $this->authorize('update', $id);
         PersonalInformation::whereId($id)->update($request->all());
         return ['message'=> 'Updated successfully.'];
     }

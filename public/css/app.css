@@ -11356,3 +11356,11 @@ a.text-dark:focus {
   }
 }
 
+* {
+  border-radius: 0 !important;
+}
+
+.xbtn:hover {
+  background-color: rgba(187, 34, 34, 0.25);
+}
+

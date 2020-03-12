@@ -42,7 +42,7 @@ class ProfessionalCertificationController extends Controller
             'issued_on',
             'expiry'
         ])->all());
-        $pc->file_path = $request->file('attachment')->store('uploads');
+        $pc->attachment_filepath = $request->file('attachment')->store('uploads');
         auth()->user()->professionalCertifications()->save($pc);
         return ['certification'=> $pc, 'message'=> 'Saved successfully.'];
     }
@@ -79,5 +79,6 @@ class ProfessionalCertificationController extends Controller
     public function destroy($id)
     {
         ProfessionalCertification::destroy($id);
+        return ['meaasge' => 'Certification deleted successfully.',];
     }
 }

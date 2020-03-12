@@ -1,6 +1,8 @@
 <template>
   <div>
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+    <h4 class="font-weight-bold">Skills</h4>
+    <skills></skills>
+    <form action method="POST" @submit.prevent="createSkill" novalidate>
       <div class="form-group">
         <label for="skill">Add Skill</label>
         <input
@@ -9,11 +11,11 @@
           id="skill"
           class="form-control"
           placeholder="e.g. Public speaking"
-          v-model="$v.values.skill.$model"
-          :class="[validationClass('skill')]"
+          v-model="$v.values.name.$model"
+          :class="[validationClass('name')]"
         />
         <div class="invalid-feedback">
-          <required-error path="skill" :v="$v" />
+          <required-error path="name" :v="$v" />
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
@@ -23,24 +25,44 @@
 
 <script>
 const { required } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
+const Skills = require("./Skills").default;
 
 const defaultValues = {
-  skill: ""
+  name: ""
 };
 
 export default {
   name: "SkillForm",
-  props: { eventBus: Vue },
-  mixins: [FormMixin],
-  data: function() {
+  components: { Skills },
+  mixins: [FormValidationMixin],
+  data() {
     return {
-      values: { ...this.initialValues || defaultValues },
-      resourcePrefix: '/skills'
+      values: { ...defaultValues },
+      resourcePath: "/skills"
     };
   },
   validations: {
-    values: { skill: { required } }
+    values: { name: { required } }
+  },
+  methods: {
+    createSkill() {
+      axios
+        .post(this.resourcePath, this.values)
+        .then(response => {
+          // console.log(response);
+          this.$root.$emit("skill-added", response.data.skill);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          // console.error(error.response);
+          this.$notify({ type: "error", text: error.response.data.message });
+        });
+    },
+    reset() {
+      this.values = { ...defaultValues };
+      this.$v.$reset();
+    }
   }
 };
 </script>

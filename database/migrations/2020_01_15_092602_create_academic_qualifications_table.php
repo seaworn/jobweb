@@ -22,7 +22,7 @@ class CreateAcademicQualificationsTable extends Migration
             $table->string('course');
             $table->string('specialization');
             $table->string('grade');
-            $table->string('file_path');
+            $table->string('attachment_filepath');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -13,7 +13,7 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        $basic = Role::updateOrCreate(['name'=> 'basic', 'guard_name'=> 'web']);
+        $basic = Role::updateOrCreate(['name'=> 'basic', 'guard_name'=> 'api']);
         $resources = [
             'personal-information',
             'academic-qualification',
@@ -31,7 +31,7 @@ class RolesTableSeeder extends Seeder
         }
         $basicPermissions = Permission::whereIn('name', $perm)->get();
         $basic->syncPermissions($basicPermissions);
-        $admin = Role::updateOrCreate(['name'=> 'admin', 'guard_name'=> 'web']);
+        $admin = Role::updateOrCreate(['name'=> 'admin', 'guard_name'=> 'api']);
         $adminPermissions = Permission::whereIn('name', [
             'access-user',
             'create-user',
@@ -47,7 +47,7 @@ class RolesTableSeeder extends Seeder
             'view-permission',
             'update-permission',
             'delete-permission'
-        ]);
+        ])->get();
         $admin->syncPermissions($adminPermissions);
     }
 }

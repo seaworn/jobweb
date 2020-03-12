@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <h4 class="font-weight-bold">Referees</h4>
+  <div v-if="referees.length">
     <div class="justify-content-center">
       <table class="table">
-        <thead class="font-weight-bold">
+        <thead class="thead-light font-weight-bold">
           <tr>
             <th>Full Name</th>
             <th>Occupation</th>
@@ -11,50 +10,69 @@
             <th>Email Address</th>
             <th>Relationship</th>
             <th>Length of Relationship</th>
-            <th colspan="2">Action</th>
+            <th colspan="2" v-if="showActions">Action</th>
           </tr>
         </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.full_name}}</td>
-          <td>{{entry.occupation}}</td>
-          <td>{{entry.phone_no}}</td>
-          <td>{{entry.email}}</td>
-          <td>{{entry.relationship}}</td>
-          <td>{{entry.length_of_relationship}}</td>
-          <td>
-            <button class="btn text-primary" @click="showForm = true; entryToEdit = entry">
-              <i class="fa fa-edit" />&nbsp;Edit
-            </button>
-            <button class="btn text-danger" @click="()=>deleteEntry(entry.id)">
-              <i class="fa fa-trash" />&nbsp;Delete
-            </button>
+        <tr v-for="referee in referees" :key="referee.id">
+          <td>{{referee.full_name}}</td>
+          <td>{{referee.occupation}}</td>
+          <td>{{referee.phone_no}}</td>
+          <td>{{referee.email}}</td>
+          <td>{{referee.relationship}}</td>
+          <td>{{referee.length_of_relationship}}</td>
+          <td v-if="showActions">
+            <div class="btn-group" role="group" aria-label>
+              <button class="btn text-primary" @click="$emit('edit-referees')">
+                <i class="fa fa-edit" />&nbsp;Edit
+              </button>
+              <button class="btn text-danger" @click="deleteReferee(referee.id)">
+                <i class="fa fa-trash" />&nbsp;Delete
+              </button>
+            </div>
           </td>
         </tr>
       </table>
-    </div>
-    <button type="button" class="btn btn-primary" @click="showForm = true" v-if="!showForm">Add</button>
-    <div v-if="showForm">
-      <referee-form :initial-values="entryToEdit" />
     </div>
   </div>
 </template>
 
 <script>
-const RefereeForm = require("./RefereeForm").default;
-const { ViewMixin } = require("./mixins");
-
 export default {
-  components: { RefereeForm },
-  mixins: [ViewMixin],
+  name: "Referees",
+  props: { showActions: { type: Boolean, default: true } },
   data() {
     return {
-      resourcePrefix: "/referees"
+      referees: [],
+      resourcePath: "/referees"
     };
   },
   created() {
-    this.$on("ref-saved", function() {
-      this.showForm = false;
+    axios
+      .get(this.resourcePath)
+      .then(response => {
+        //console.log(response);
+        this.referees = response.data;
+      })
+      .catch(error => {
+        //console.error(error.response);
+      });
+    this.$root.$on("referee-added", referee => {
+      this.referees.append(referee);
     });
+  },
+  methods: {
+    deleteReferee(id) {
+      axios
+        .delete(`${this.resourcePath}/${id}`)
+        .then(response => {
+          //console.log(response);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          //console.error(error.response);
+          this.$notify({ type: "error", text: error.response.data.message });
+        });
+    }
   }
 };
 </script>

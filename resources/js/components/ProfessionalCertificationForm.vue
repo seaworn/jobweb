@@ -1,41 +1,38 @@
 <template>
   <div>
     <h4 class="font-weight-bold">Professional Certifications</h4>
-    <form
-      action
-      method="POST"
-      @submit.prevent="handleSubmit"
-      novalidate
-      enctype="multipart/form-data"
-    >
-      <div class="form-group">
-        <label for="certificateName">Certificate Name</label>
-        <input
-          type="text"
-          name="certificateName"
-          id="certificateName"
-          class="form-control"
-          placeholder="e.g. CCNA"
-          v-model="$v.values.certificate_name.$model"
-          :class="[validationClass('certificate_name')]"
-        />
-        <div class="invalid-feedback">
-          <required-error :v="$v" path="certificate_name" />
+    <professional-certifications @edit-certification="values = $event"></professional-certifications>
+    <form action method="POST" @submit.prevent="createCert" novalidate enctype="multipart/form-data">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="certificateName">Certificate Name</label>
+          <input
+            type="text"
+            name="certificateName"
+            id="certificateName"
+            class="form-control"
+            placeholder="e.g. CCNA"
+            v-model="$v.values.certificate_name.$model"
+            :class="[validationClass('certificate_name')]"
+          />
+          <div class="invalid-feedback">
+            <required-error :v="$v" path="certificate_name" />
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="issuingBody">Issuing Body</label>
-        <input
-          type="text"
-          name="issuingBody"
-          id="issuingBody"
-          class="form-control"
-          placeholder="e.g. Cisco"
-          v-model="$v.values.issuing_body.$model"
-          :class="[validationClass('issuing_body')]"
-        />
-        <div class="invalid-feedback">
-          <required-error :v="$v" path="issuing_body" />
+        <div class="form-group col-md-6">
+          <label for="issuingBody">Issuing Body</label>
+          <input
+            type="text"
+            name="issuingBody"
+            id="issuingBody"
+            class="form-control"
+            placeholder="e.g. Cisco"
+            v-model="$v.values.issuing_body.$model"
+            :class="[validationClass('issuing_body')]"
+          />
+          <div class="invalid-feedback">
+            <required-error :v="$v" path="issuing_body" />
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -53,7 +50,7 @@
       </div>
       <div class="form-row d-flex align-items-center">
         <div class="form-group col-md-4">
-          <label for="issuedOn">Year</label>
+          <label for="issuedOn">Issue Date</label>
           <input
             type="date"
             name="issuedOn"
@@ -68,7 +65,7 @@
           </div>
         </div>
         <div class="form-group col-md-4" v-if="values.expires">
-          <label for="expiry">Expiry</label>
+          <label for="expiry">Expiry Date</label>
           <input
             type="date"
             name="expiry"
@@ -94,7 +91,8 @@
           <label for="expiresToggle" class="form-check-label">Does not expire</label>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-row">
+        <div class="form-group col-auto">
         <label for="attachment">Attach Copy</label>
         <input
           type="file"
@@ -107,14 +105,16 @@
           <!-- <required-error :v="$v" path="file" /> -->
         </div>
       </div>
+      </div>
       <button type="submit" class="btn btn-primary">Save</button>
+      <button type="button" class="btn btn-secondary" @click="reset">Clear</button>
     </form>
   </div>
 </template>
 
 <script>
 const { required, requiredIf } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
 const ProfessionalCertifications = require("./ProfessionalCertifications")
   .default;
 
@@ -130,14 +130,34 @@ const defaultValues = {
 
 export default {
   name: "ProfessionalCertificationForm",
-  props: { eventBus: Vue },
-  mixins: [FormMixin],
   components: { ProfessionalCertifications },
+  mixins: [FormValidationMixin],
   data() {
     return {
-      values: { ...(this.initialValues || defaultValues) },
-      resourcePrefix: "/professional-certifications"
+      values: { ...defaultValues },
+      resourcePath: "/professional-certifications"
     };
+  },
+  methods: {
+    createCert() {
+      const fd = new FormData();
+      Object.keys(this.values).map(key => fd.append(key, this.values[key]));
+      axios
+        .post(this.resourcePath, fd)
+        .then(response => {
+          // console.log(response);
+          this.$root.$emit("certification-added", response.data.certification);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          // console.error(error.response);
+          this.$notify({ type: "error", text: error.response.data.message });
+        });
+    },
+    reset() {
+      this.values = {...defaultValues};
+      this.$v.$reset();
+    }
   },
   validations: {
     values: {

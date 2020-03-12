@@ -25,10 +25,10 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->validate([
-            'skill'=> 'required|alpha'
-        ]);
-        $skill = Skill::create($input);
+        $input = collect($request->validate([
+            'name'=> 'required|string|min:2'
+        ]));
+        $skill = Skill::create($input->only(['name'])->all());
         auth()->user()->skills()->attach($skill);
         return ['skill'=> $skill, 'message'=> 'Saved successfully'];
     }
@@ -62,9 +62,9 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Skill $skill)
     {
-        Skill::destroy($id);
-        return auth()->user()->skills;
+        auth()->user()->skills()->detach($skill);
+        return ['message' => 'Skill deleted successfully.',];
     }
 }

@@ -27,7 +27,7 @@ class CreatePersonalInformationTable extends Migration
             $table->string('phone_no');
             $table->text('disability')->nullable();
             $table->text('criminal_record')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

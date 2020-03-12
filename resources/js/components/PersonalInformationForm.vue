@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="font-weight-bold">Personal Information</h4>
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+    <form action method="POST" @submit.prevent="createPersonalInfo" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
@@ -251,12 +251,14 @@
           <required-error path="criminal_record" :v="$v" />
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" >Save</button>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-secondary" @click="reset">Clear</button>
     </form>
   </div>
 </template>
 
 <script>
+const { mapGetters } = require("vuex");
 const {
   required,
   alpha,
@@ -267,7 +269,7 @@ const {
   minValue,
   requiredIf
 } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
 
 export const defaultValues = {
   full_name: "",
@@ -289,12 +291,26 @@ export const defaultValues = {
 
 export default {
   name: "PersonalInformationForm",
-  mixins: [FormMixin],
+  mixins: [FormValidationMixin],
   data() {
     return {
-      values: { ...(this.initialValues || defaultValues) },
-      resourcePrefix: `/personal-information`,
+      values: { ...defaultValues },
+      resourcePath: `/personal-information`
     };
+  },
+  computed: {
+    ...mapGetters(["session"])
+  },
+  created() {
+    axios
+      .get(`/personal-information/${this.session.user.id}`)
+      .then(response => {
+        // console.log(response);
+        if (response.data) this.values = response.data;
+      })
+      .catch(error => {
+        // console.error(error.response);
+      });
   },
   validations: {
     values: {
@@ -319,6 +335,25 @@ export default {
       criminal_record: {
         requiredIfHasCriminalRecord: requiredIf("has_criminal_record")
       }
+    }
+  },
+  methods: {
+    createPersonalInfo() {
+      axios
+        .post(this.resourcePath, this.values)
+        .then(response => {
+          // console.log(response);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          console.error(error.response);
+          this.$notify({ type: "error", text: response.data.message });
+          //
+        });
+    },
+    reset() {
+      this.values = { ...defaultValues };
+      this.$v.$reset();
     }
   }
 };

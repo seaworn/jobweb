@@ -1,6 +1,8 @@
 <template>
   <div>
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+    <h4 class="font-weight-bold">Work Experience</h4>
+    <work-experience @edit-experience="values = $event"></work-experience>
+    <form action method="POST" @submit.prevent="createWorkExperience" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="from">From</label>
@@ -33,34 +35,36 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="position">Position</label>
-        <input
-          type="text"
-          name="position"
-          id="position"
-          class="form-control"
-          placeholder="e.g. Head of Security"
-          v-model="$v.values.position.$model"
-          :class="[validationClass('position')]"
-        />
-        <div class="invalid-feedback">
-          <required-error path="position" :v="$v" />
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="position">Position</label>
+          <input
+            type="text"
+            name="position"
+            id="position"
+            class="form-control"
+            placeholder="e.g. Head of Security"
+            v-model="$v.values.position.$model"
+            :class="[validationClass('position')]"
+          />
+          <div class="invalid-feedback">
+            <required-error path="position" :v="$v" />
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="organization">Organization</label>
-        <input
-          type="text"
-          name="organization"
-          id="organization"
-          class="form-control"
-          placeholder="e.g. JobWeb"
-          v-model="$v.values.organization.$model"
-          :class="[validationClass('organization')]"
-        />
-        <div class="invalid-feedback">
-          <required-error path="position" :v="$v" />
+        <div class="form-group col-md-6">
+          <label for="organization">Organization</label>
+          <input
+            type="text"
+            name="organization"
+            id="organization"
+            class="form-control"
+            placeholder="e.g. JobWeb"
+            v-model="$v.values.organization.$model"
+            :class="[validationClass('organization')]"
+          />
+          <div class="invalid-feedback">
+            <required-error path="position" :v="$v" />
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -79,13 +83,15 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-secondary" @click="reset">Clear</button>
     </form>
   </div>
 </template>
 
 <script>
 const { required } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
+const WorkExperience = require("./WorkExperience").default;
 
 const defaultValues = {
   from: "",
@@ -97,13 +103,32 @@ const defaultValues = {
 
 export default {
   name: "WorkExperienceForm",
-  props: { eventBus: Vue },
-  mixins: [FormMixin],
-  data: function() {
+  components: { WorkExperience },
+  mixins: [FormValidationMixin],
+  data() {
     return {
-      values: { ...this.initialValues || defaultValues },
-      resourcePrefix: "/work-experience"
+      values: { ...defaultValues },
+      resourcePath: "/work-experience"
     };
+  },
+  methods: {
+    createWorkExperience() {
+      axios
+        .post(this.resourcePath, this.values)
+        .then(response => {
+          //console.log(response);
+          this.$root.$emit("experience-added", response.data.experience);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          //console.error(error.response);
+          this.$notify({ type: "error", text: error.response.data.message });
+        });
+    },
+    reset() {
+      this.values = { ...defaultValues };
+      this.$v.$reset();
+    }
   },
   validations: {
     values: {

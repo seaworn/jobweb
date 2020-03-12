@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <h4 class="font-weight-bold">Work Experience</h4>
+  <div v-if="workExperience.length">
     <div class="justify-content-center">
-      <table class="table">
+      <table class="table table-striped">
         <thead class="font-weight-bold">
           <tr>
             <th>From</th>
@@ -10,49 +9,71 @@
             <th>Position</th>
             <th>Organization</th>
             <th>Roles</th>
-            <th colspan="2">Action</th>
+            <th colspan="2" v-if="showActions">Action</th>
           </tr>
         </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.from}}</td>
-          <td>{{entry.to}}</td>
-          <td>{{entry.position}}</td>
-          <td>{{entry.organization}}</td>
-          <td>{{entry.roles}}</td>
-          <td>
-            <button class="btn text-primary" @click="showForm = true; entryToEdit = entry">
-              <i class="fa fa-edit" />&nbsp;Edit
-            </button>
-            <button class="btn text-danger" @click="() => deleteEntry(entry.id)">
-              <i class="fa fa-trash" />&nbsp;Delete
-            </button>
+        <tr v-for="experience in workExperience" :key="experience.id">
+          <td>{{experience.from}}</td>
+          <td>{{experience.to}}</td>
+          <td>{{experience.position}}</td>
+          <td>{{experience.organization}}</td>
+          <td>{{experience.roles}}</td>
+          <td v-if="showActions">
+            <div class="btn-group" role="group" aria-label>
+              <button class="btn text-primary" @click="$emit('edit-experience', experience)">
+                <i class="fa fa-edit" />&nbsp;Edit
+              </button>
+              <button class="btn text-danger" @click="deleteExperience(experience.id)">
+                <i class="fa fa-trash" />&nbsp;Delete
+              </button>
+            </div>
           </td>
         </tr>
       </table>
-    </div>
-    <button type="button" class="btn btn-primary" @click="showForm = true" v-if="!showForm">Add</button>
-    <div v-if="showForm">
-      <work-experience-form :initial-values="entryToEdit" />
     </div>
   </div>
 </template>
 
 <script>
-const WorkExperienceForm = require("./WorkExperienceForm").default;
-const { ViewMixin } = require("./mixins");
-
 export default {
-  components: { WorkExperienceForm },
-  mixins: [ViewMixin],
+  name: "WorkExperience",
+  props: { showActions: { type: Boolean, default: false } },
   data() {
     return {
-      resourcePrefix: "/work-experience"
+      workExperience: [],
+      resourcePath: "/work-experience"
     };
   },
   created() {
-    this.$on("wxp-saved", function() {
-      this.showForm = false;
+    this.$on("experience-added", experience => {
+      this.workExperience.push(experience);
     });
+    axios
+      .get(this.resourcePath)
+      .then(response => {
+        //console.log(response);
+        this.workExperience = response.data;
+      })
+      .catch(error => {
+        //console.error(error.response);
+      });
+  },
+  methods: {
+    deleteExperience(id) {
+      axios
+        .delete(`${this.resourcePath}/${id}`)
+        .then(response => {
+          //console.log(response);
+          this.workExperience = this.workExperience.filter(experience => {
+            return experience.id !== id;
+          });
+          this.$notify({type: "success", text: response.data.message});
+        })
+        .catch(error => {
+          //console.error(error.response);
+          this.$notify({type: "error", text: error.response.data.message});
+        });
+    }
   }
 };
 </script>

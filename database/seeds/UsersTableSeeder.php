@@ -12,6 +12,12 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $admin = \App\User::create([
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => 'admin001',
+        ]);
+        $admin->roles()->attach(Role::whereName('admin')->get());
         factory(\App\User::class, 3)->create()->each(function ($user) {
             $role = Role::inRandomOrder()->first();
             $user->roles()->attach($role);

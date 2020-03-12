@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <h4 class="font-weight-bold">Academic Qualifications</h4>
+  <div v-if="academics.length">
     <div class="justify-content-center">
       <table class="table">
-        <thead class="font-weight-bold">
+        <thead class="thead-light font-weight-bold">
           <tr>
             <th>Institution</th>
             <th>From</th>
@@ -12,52 +11,73 @@
             <th>Course of Study</th>
             <th>Specialization</th>
             <th>Qualification Grade</th>
-            <th colspan="2">Action</th>
+            <th colspan="2" v-if="showActions">Action</th>
           </tr>
         </thead>
-        <tr v-for="entry in entries" :key="entry.id">
-          <td>{{entry.institution}}</td>
-          <td>{{entry.from}}</td>
-          <td>{{entry.to}}</td>
-          <td>{{entry.academic_level}}</td>
-          <td>{{entry.course}}</td>
-          <td>{{entry.specialization}}</td>
-          <td>{{entry.grade}}</td>
-          <td>
-            <button class="btn text-primary" @click="showForm = true; entryToEdit = entry">
-              <i class="fa fa-edit" />&nbsp;Edit
-            </button>
-            <button class="btn text-danger" @click="() => deleteEntry(entry.id)">
-              <i class="fa fa-trash" />&nbsp;Delete
-            </button>
+        <tr v-for="education in academics" :key="education.id">
+          <td>{{education.institution}}</td>
+          <td>{{education.from}}</td>
+          <td>{{education.to}}</td>
+          <td>{{education.academic_level}}</td>
+          <td>{{education.course}}</td>
+          <td>{{education.specialization}}</td>
+          <td>{{education.grade}}</td>
+          <td v-if="showActions">
+            <div class="btn-group" role="group" aria-label>
+              <button class="btn text-primary" @click="$emit('edit-education', education)">
+                <i class="fa fa-edit" />&nbsp;Edit
+              </button>
+              <button class="btn text-danger" @click="deleteQualification(education.id)">
+                <i class="fa fa-trash" />&nbsp;Delete
+              </button>
+            </div>
           </td>
         </tr>
       </table>
     </div>
-    <div v-if="showForm">
-      <academic-qualification-form :initial-values="entryToEdit" />
-    </div>
-    <button type="button" class="btn btn-primary" @click="showForm = true" v-if="!showForm">Add</button>
   </div>
 </template>
 
 <script>
-const AcademicQualificationForm = require("./AcademicQualificationForm")
-  .default;
-const { ViewMixin } = require("./mixins");
-
 export default {
-  components: { AcademicQualificationForm },
-  mixins: [ViewMixin],
-  data: function() {
+  name: "AcademicQualifications",
+  props: { showActions: { type: Boolean, default: true } },
+  data() {
     return {
+      academics: [],
       resourcePrefix: "/academic-qualifications"
     };
   },
-  created: function() {
-    this.$on("aq-saved", function() {
-      this.showForm = false;
+  created() {
+    this.$root.$on("education-added", education => {
+      this.academics.push(education);
     });
+    axios
+      .get(this.resourcePrefix)
+      .then(response => {
+        //console.log(response);
+        this.academics = response.data;
+      })
+      .catch(error => {
+        //console.error(error.response);
+      });
+  },
+  methods: {
+    deleteQualification(id) {
+      axios
+        .delete(`${this.resourcePrefix}/${id}`)
+        .then(response => {
+          //console.log(response);
+          this.academics = this.academics.filter(qualification => {
+            return qualification.id !== id;
+          });
+          this.$notify({type: "success", text: response.data.message});
+        })
+        .catch(error => {
+          //console.error(error.response);
+          this.$notify({type: "error", text: error.response.data.message});
+      });
+    }
   }
 };
 </script>

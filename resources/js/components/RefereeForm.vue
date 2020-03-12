@@ -1,6 +1,8 @@
 <template>
   <div>
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+    <h4 class="font-weight-bold">Referees</h4>
+    <referees @edit-referee="values = $event"></referees>
+    <form action method="POST" @submit.prevent="createReferee" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
@@ -42,22 +44,6 @@
           <name-error path="other_names" :v="$v" />
         </div>
       </div>
-      <div class="form-group">
-        <label for="occupation">Occupation</label>
-        <input
-          type="text"
-          name="occupation"
-          id="occupation"
-          class="form-control"
-          placeholder="e.g. Religious Leader"
-          v-model="$v.values.occupation.$model"
-          :class="[validationClass('occupation')]"
-        />
-        <div class="invalid-feedback">
-          <required-error path="occupation" :v="$v" />
-          <alphanum-error path="occupation" :v="$v" />
-        </div>
-      </div>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="phoneNo">Phone Number</label>
@@ -84,6 +70,24 @@
             :class="[validationClass('email')]"
           />
           <email-error path="email" :v="$v" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="occupation">Occupation</label>
+          <input
+            type="text"
+            name="occupation"
+            id="occupation"
+            class="form-control"
+            placeholder="e.g. Religious Leader"
+            v-model="$v.values.occupation.$model"
+            :class="[validationClass('occupation')]"
+          />
+          <div class="invalid-feedback">
+            <required-error path="occupation" :v="$v" />
+            <alphanum-error path="occupation" :v="$v" />
+          </div>
         </div>
       </div>
       <div class="form-row">
@@ -118,6 +122,7 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-secondary" @click="reset">Clear</button>
     </form>
   </div>
 </template>
@@ -132,7 +137,8 @@ const {
   minLength,
   maxLength
 } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
+const Referees = require("./Referees").default;
 
 const defaultValues = {
   first_name: "",
@@ -147,13 +153,32 @@ const defaultValues = {
 
 export default {
   name: "RefereeForm",
-  props: { eventBus: Vue },
-  mixins: [FormMixin],
-  data: function() {
+  components: { Referees },
+  mixins: [FormValidationMixin],
+  data() {
     return {
-      values: { ...this.initialValues || defaultValues },
-      resourcePrefix: "/referees"
+      values: { ...defaultValues },
+      resourcePath: "/referees"
     };
+  },
+  methods: {
+    createReferee() {
+      axios
+        .post(this.resourcePath)
+        .then(response => {
+          //console.log(response);
+          this.$root.$emit("referee-added", response.data.referee);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          //console.error(error.response);
+          this.$notify({ type: "error", text: error.response.data.message });
+        });
+    },
+    reset() {
+      this.values = { ...defaultValues };
+      this.$v.reset();
+    }
   },
   validations: {
     values: {

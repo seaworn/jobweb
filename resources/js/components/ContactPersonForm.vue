@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="font-weight-bold">Contact Person</h4>
-    <form action method="POST" @submit.prevent="handleSubmit" novalidate>
+    <form action method="POST" @submit.prevent="createContact" novalidate>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+const { mapGetters } = require("vuex");
 const {
   required,
   alpha,
@@ -85,7 +86,7 @@ const {
   maxLength,
   numeric
 } = require("vuelidate/lib/validators");
-const { FormMixin } = require("./mixins");
+const { FormValidationMixin } = require("./mixins");
 
 export const defaultValues = {
   full_name: "",
@@ -98,13 +99,44 @@ export const defaultValues = {
 
 export default {
   name: "ContactPersonForm",
-  props: { eventBus: Vue },
-  mixins: [FormMixin],
-  data: function() {
+  mixins: [FormValidationMixin],
+  data() {
     return {
-      values: { ...(this.initialValues || defaultValues) },
-      resourcePrefix: `/contact-person`
+      values: { ...defaultValues },
+      resourcePathPrefix: `/contact-person`
     };
+  },
+  computed: {
+    ...mapGetters(["session"])
+  },
+  created() {
+    axios
+      .get(this.resourcePathPrefix)
+      .then(response => {
+        // console.log(response);
+        if (response.data) this.values = response.data;
+      })
+      .catch(error => {
+        // console.error(error.response);
+      });
+  },
+  methods: {
+    createContact() {
+      axios
+        .post(this.resourcePathPrefix, this.values)
+        .then(response => {
+          // console.log(response);
+          this.$notify({ type: "success", text: response.data.message });
+        })
+        .catch(error => {
+          // console.error(error.response);
+          this.$notify({ type: "error", text: response.data.message });
+        });
+    },
+    reset() {
+      this.values = { ...defaultValues };
+      this.$v.$reset();
+    }
   },
   validations: {
     values: {

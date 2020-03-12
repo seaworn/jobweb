@@ -37,7 +37,7 @@ class PermissionsTableSeeder extends Seeder
 
         foreach ($actions as $action) {
             foreach ($resources as $resource) {
-                Permission::updateOrCreate(['name'=> "{$action}-{$resource}", 'guard_name'=> 'web']);
+                Permission::updateOrCreate(['name'=> "{$action}-{$resource}", 'guard_name'=> 'api']);
             }
         }
     }

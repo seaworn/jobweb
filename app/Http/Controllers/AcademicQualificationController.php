@@ -46,7 +46,7 @@ class AcademicQualificationController extends Controller
             'specialization',
             'grade'
         ])->all());
-        $aq->file_path = $request->file('attachment')->store('uploads');
+        $aq->attachment_filepath = $request->file('attachment')->store('uploads');
         auth()->user()->academicQualifications()->save($aq);
         return ['academicQualification'=> $aq, 'message'=> 'Saved succesfully.'];
     }

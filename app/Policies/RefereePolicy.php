@@ -41,7 +41,7 @@ class RefereePolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('view-referee');
+        return $user->hasPermissionTo('create-referee');
     }
 
     /**

@@ -15,6 +15,11 @@ use Illuminate\Http\Request;
 
 
 // Auth::routes();
+
+Route::get('/demo', function () {
+    return view('demo', ['perm'=> \Spatie\Permission\Models\Permission::paginate(10)]);
+});
+
 Route::fallback(function () {
     return view('index');
 });
