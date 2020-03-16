@@ -37,6 +37,8 @@ const Roles = require('./components/Roles').default;
 const Http403 = require('./components/Http403').default;
 const Http404 = require('./components/Http404').default;
 const Http500 = require('./components/Http500').default;
+const JobListing = require('./components/JobListing').default;
+const JobView = require('./components/JobView').default;
 
 // State management plugin
 const Vuex = require('vuex').default;
@@ -202,29 +204,39 @@ const router = new VueRouter({
         adminRequired: true
       },
       children: [{
-          name: 'users',
+          name: 'manage-users',
           path: 'users',
           component: Users
         },
         {
-          name: 'permissions',
+          name: 'manage-permissions',
           path: 'permissions',
           component: Permissions
         },
         {
-          name: 'roles',
+          name: 'manage-roles',
           path: 'roles',
           component: Roles
         },
         {
-          name: 'jobs',
+          name: 'manage-jobs',
           path: 'jobs',
           component: Jobs
         }
       ],
       redirect: {
-        name: 'jobs'
+        name: 'manage-jobs'
       }
+    },
+    {
+      name: 'job-listing',
+      path: '/jobs',
+      component: JobListing
+    },
+    {
+      name: 'show-job',
+      path: '/jobs/:id',
+      component: JobView
     },
     {
       name: 'forbidden',

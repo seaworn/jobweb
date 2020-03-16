@@ -20,8 +20,8 @@ class CreateWorkExperienceTable extends Migration
             $table->date('to');
             $table->string('organization');
             $table->text('roles');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });
     }

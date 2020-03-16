@@ -15,8 +15,8 @@ class CreateInstitutionsTable extends Migration
     {
         Schema::create('institutions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->boolean('accredited');
+            $table->string('name')->unique();
+            $table->boolean('is_accredited')->default(false);
             $table->timestamps();
         });
     }

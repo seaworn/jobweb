@@ -19,13 +19,13 @@ class CreateAcademicQualificationsTable extends Migration
             $table->date('to');
             $table->string('institution');
             $table->string('academic_level');
-            $table->string('course');
-            $table->string('specialization');
+            $table->string('course')->nullable();
+            $table->string('specialization')->nullable();
             $table->string('grade');
             $table->string('attachment_filepath');
             $table->timestamps();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

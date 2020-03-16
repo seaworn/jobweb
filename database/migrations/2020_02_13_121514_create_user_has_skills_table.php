@@ -14,10 +14,10 @@ class CreateUserHasSkillsTable extends Migration
     public function up()
     {
         Schema::create('user_has_skills', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('profile_id');
             $table->unsignedBigInteger('skill_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('skill_id')->references('id')->on('skills');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 

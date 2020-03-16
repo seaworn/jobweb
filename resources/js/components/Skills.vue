@@ -29,7 +29,7 @@ export default {
         this.skills = response.data;
       })
       .catch(error => {
-        // console.log(error.response);
+        console.log(error.response);
       });
   },
   methods: {

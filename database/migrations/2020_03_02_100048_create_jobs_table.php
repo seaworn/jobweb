@@ -23,10 +23,9 @@ class CreateJobsTable extends Migration
             $table->text('duties');
             $table->string('min_salary');
             $table->string('max_salary');
-            $table->string('no_of_opennings');
+            $table->string('no_of_openings');
             $table->datetime('expiry');
-            $table->unsignedBigInteger('function_id');
-            $table->foreign('function_id')->references('id')->on('job_functions');
+            $table->unsignedBigInteger('job_function_id');
             $table->timestamps();
         });
     }

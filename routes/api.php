@@ -26,7 +26,7 @@ Route::middleware('auth:api')->group(function() {
     Route::apiResource('permissions', 'PermissionController');
     Route::apiResource('roles', 'RoleController');
     Route::apiResource('jobs', 'JobController');
-    Route::apiResource('personal-information', 'PersonalInformationController');
+    Route::apiResource('personal-information', 'ProfileController');
     Route::apiResource('contact-person', 'ContactPersonController');
     Route::apiResource('academic-qualifications', 'AcademicQualificationController');
     Route::apiResource('work-experience', 'WorkExperienceController');
@@ -35,5 +35,7 @@ Route::middleware('auth:api')->group(function() {
     Route::apiResource('skills', 'SkillController');
     Route::apiResource('referees', 'RefereeController');
     Route::delete('/roles/{rid}/permissions/{pid}', 'RoleController@revokePermission');
+    Route::get('/job-functions', 'JobFunctionController@index');
+    Route::get('/contract-types', 'ContractTypeController@index');
 });
     

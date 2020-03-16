@@ -56,7 +56,7 @@ export const CRUDMixin = {
         this[this.resourceName.collection] = response.data;
       })
       .catch(error => {
-        // console.error(error.response);
+        console.error(error.response);
       });
   },
   methods: {
@@ -105,7 +105,7 @@ export const CRUDMixin = {
     },
     delete_(res) {
       axios
-        .delete(`${this.resourcePath}/${resource.id}`)
+        .delete(`${this.resourcePath}/${res.id}`)
         .then(response => {
           // console.log(response);
           const idx = this[this.resourceName.collection].indexOf(res);

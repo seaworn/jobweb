@@ -6,22 +6,22 @@
           <h4 class="text-white">Dashboard</h4>
           <ul class="nav flex-column">
             <li class="nav-item">
-              <router-link class="nav-link" :to="{name: 'jobs'}">
+              <router-link class="nav-link" :to="{name: 'manage-jobs'}">
                 Jobs
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" :to="{name: 'roles'}">
+              <router-link class="nav-link" :to="{name: 'manage-roles'}">
                 Roles
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" :to="{name: 'permissions'}">
+              <router-link class="nav-link" :to="{name: 'manage-permissions'}">
                 Permisions
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" :to="{name: 'users'}">
+              <router-link class="nav-link" :to="{name: 'manage-users'}">
                 Users
               </router-link>
             </li>
