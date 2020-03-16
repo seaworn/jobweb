@@ -222,7 +222,7 @@ export default {
       let permissions = [];
       if (this.$refs.grantAll.checked === true) {
         permissions = this.permissions;
-      } else if (currentRole) {
+      } else if (this.currentRole) {
         permissions = filterAssignedPermissions(this.currentRole);
       }
       if (permissions.length) {

@@ -42,36 +42,42 @@ class User extends Authenticatable
 
     protected $appends = ['can', 'givenRole'];
 
-    public function personalInformation() {
-        return $this->hasOne(PersonalInformation::class);
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    public function getPersonalInformationAttribute() {
+        return $this->profile;
     }
     
     public function academicQualifications() {
-        return $this->hasMany(AcademicQualification::class);
+        return $this->hasManyThrough(AcademicQualification::class, Profile::class);
     }
     
     public function professionalCertifications() {
-        return $this->hasMany(ProfessionalCertification::class);
+        return $this->hasManyThrough(ProfessionalCertification::class, Profile::class);
     }
     
     public function professionalMemberships() {
-        return $this->hasMany(ProfessionalMembership::class);
+        return $this->hasManyThrough(ProfessionalMembership::class, Profile::class);
     }
     
-    public function skills() {
-        return $this->belongsToMany(Skill::class, 'user_has_skills');
+    public function getSkillsAttribute() {
+        // return $this->hasManyThrough(Skill::class, Profile::class);
+        return $this->profile ? $this->profile->skills: null;
     }
     
     public function workExperience() {
-        return $this->hasMany(WorkExperience::class);
+        return $this->hasManyThrough(WorkExperience::class, Profile::class);
     }
     
     public function contactPerson() {
-        return $this->hasOne(ContactPerson::class);
+        return $this->hasOneThrough(ContactPerson::class, Profile::class);
     }
     
     public function referees() {
-        return $this->hasMany(Referee::class);
+        return $this->hasManyThrough(Referee::class, Profile::class);
     }
 
     public function setPasswordAttribute($value)

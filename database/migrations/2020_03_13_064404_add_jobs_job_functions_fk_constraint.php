@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAcademicFieldsTable extends Migration
+class AddJobsJobFunctionsFkConstraint extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateAcademicFieldsTable extends Migration
      */
     public function up()
     {
-        Schema::create('academic_fields', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->foreign('job_function_id')->references('id')->on('job_functions');
         });
     }
 
@@ -27,6 +25,8 @@ class CreateAcademicFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('academic_fields');
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->dropForeign('job_function_id');
+        });
     }
 }

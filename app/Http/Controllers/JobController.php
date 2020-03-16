@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Job;
+use App\JobFunction;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -15,7 +16,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        //
+        return Job::with(['contractType', 'jobFunction'])->get();
     }
 
     /**
@@ -36,7 +37,26 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = collect($request->validate([
+            'title' => '',
+            'ref_no' => '',
+            'location' => '',
+            'job_function' => '',
+            'new_job_function' => '',
+            'contract_type_id' => 'integer',
+            'experience_level' => '',
+            'skills_required' => '',
+            'duties' => '',
+            'salary_range' => '',
+            'no_of_openings' => '',
+            'expiry' => '',
+        ]));
+        $job = new Job($input->except(['job_function', 'new_job_function'])->all());
+        $jfn = $input['job_function'] ?? $input['new_job_function'];
+        $func = JobFunction::firstOrCreate(['name' => $jfn,]);
+        $job->job_function_id = $func->id;
+        $job->save();
+        return ['job' => $job, 'message' => 'Job Posted successfully.'];
     }
 
     /**
@@ -81,7 +101,8 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        //
+        $job->delete();
+        return ['message' => 'Job deleted successfully.',];
     }
 
     public function applyJob(Request $request,Job $job){

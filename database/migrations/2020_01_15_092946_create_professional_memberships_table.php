@@ -16,12 +16,12 @@ class CreateProfessionalMembershipsTable extends Migration
         Schema::create('professional_memberships', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('professional_body');
-            $table->string('reg_no');
-            $table->string('membership_type');
+            $table->string('reg_no')->nullable();
+            $table->string('membership_type')->nullable();
             $table->date('expiry')->nullable();
             $table->timestamps();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

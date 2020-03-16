@@ -18,10 +18,10 @@ class CreateContactPersonsTable extends Migration
             $table->string('first_name');
             $table->string('middle_name');
             $table->string('other_names')->nullable();
-            $table->string('phone_no');
+            $table->string('phone_no')->nullable();
             $table->string('email')->nullable();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
             $table->timestamps();
         });
     }

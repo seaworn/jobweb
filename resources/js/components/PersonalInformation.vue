@@ -57,7 +57,7 @@ export default {
         if (response.data) this.personalInfo = response.data;
       })
       .catch(error => {
-        // console.log(error.response);
+        console.log(error.response);
       });
   }
 };

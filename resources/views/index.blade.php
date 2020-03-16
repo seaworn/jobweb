@@ -24,7 +24,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-
+            <li class="nav-item"><router-link :to="{name: 'job-listing'}" class="nav-link">Jobs</router-link></li>
           </ul>
           <ul class="navbar-nav ml-auto" v-if="session.login === true">
             <li class="nav-item dropdown">

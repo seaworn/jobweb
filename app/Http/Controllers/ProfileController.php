@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\{PersonalInformation, User};
+use App\{Profile, User};
 
-class PersonalInformationController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class PersonalInformationController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->authorize('create', PersonalInformation::class);
+        // $this->authorize('create', Profile::class);
         $input = $request->validate([
             'first_name'=> '',
             'middle_name' => '',
@@ -40,7 +40,7 @@ class PersonalInformationController extends Controller
             'disability' => '',
             'criminal_record' => ''
         ]);
-        $pi = new PersonalInformation($input);
+        $pi = new Profile($input);
         auth()->user()->personalInformation()->save($pi);
         return ['message'=> 'Saved successfuly.'];
     }
@@ -67,7 +67,7 @@ class PersonalInformationController extends Controller
     public function update(Request $request, $id)
     {
         // $this->authorize('update', $id);
-        PersonalInformation::whereId($id)->update($request->all());
+        Profile::whereId($id)->update($request->all());
         return ['message'=> 'Updated successfully.'];
     }
 
