@@ -120,4 +120,7 @@ class AdminJobPostsController extends Controller
         $jobs->delete();
         return redirect('/posted-jobs')->with('status','Job Deleted Updated successfully');
     }
+    public function jobApplicant(){
+        return view('admin.jobapplicants');
+    }
 }

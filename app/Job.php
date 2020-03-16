@@ -10,6 +10,6 @@ class Job extends Model
 
     public function applicants()
     {
-        return $this->hasMany(User::class, 'applications');
+        return $this->belongsToMany(User::class, 'applications');
     }
 }

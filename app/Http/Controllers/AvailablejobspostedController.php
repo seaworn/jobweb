@@ -15,7 +15,13 @@ class AvailablejobspostedController extends Controller
     }
     public function show($id){
         
-       $jobs = Jobposts::find($id);
-       return view('')->with('jobs',$jobs);
+       $job = Jobposts::find($id);
+       return view('jobseeker.showjob')->with('job',$job);
     }
+    public function applyjob($id){
+        
+        $job = Jobposts::find($id);
+        return view('jobseeker.applyjobform')->with('job',$job);
+    }
+    
 }

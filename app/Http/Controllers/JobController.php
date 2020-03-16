@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -81,5 +82,29 @@ class JobController extends Controller
     public function destroy(Job $job)
     {
         //
+    }
+
+    public function applyJob(Request $request,Job $job){
+        return 'hello';
+        $input = $request->validate([
+            'cover_letter'=>'',
+            'cv'=>''
+        ]);
+        $user =auth()->user();
+        $cv_filepath=$request->files('cv')->store('uploads');
+        $user->applications()->save($job,['cover_letter'=>$input['cover_letter'],'cv_filepath'=>$cv_filepath]);
+        return redirect(route('joblist'))->with('status','application successfull');
+
+    }
+    public function apply(Request $request, $job){
+        $input = $request->validate([
+            'cover_letter'=>'',
+            'cv'=>''
+        ]);
+        $job = Job::find($job);
+        $user =auth()->user();
+        $cv_filepath=$request->file('cv')->store('uploads');
+        $user->applications()->save($job,['cover_letter'=>$input['cover_letter'],'cv_filepath'=>$cv_filepath]);
+        return redirect(route('joblist'))->with('status','application successfull');
     }
 }

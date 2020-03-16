@@ -121,8 +121,9 @@
           <th>Number of Posts</th>
           <th>Deadline</th>
           <th>Date Created</th>
-          <th></th>
+          
           <th colspan="2">Action</th>
+          <th><a href="/exportJobs" class="btn btn-primary">Export To PDF</a></th>
           </tr>
           </thead>
 
@@ -136,7 +137,7 @@
                   <td>{{ $item->numberofposts}}</td>
                   <td>{{ $item->deadline}}</td>
                   <td>{{ $item->created_at}}</td>
-                  <td><a href="" class="btn btn-info">Applicants <span class="badge badge-secondary">12</a></td>
+                  <td><a href="/posted-jobs" class="btn btn-info">Applicants <span class="badge badge-secondary">12</a></td>
                   <td >
                       <a href="{{ url('/editpostedjobs/'.$item->id)}}" class="btn btn-info">Update</a>
                   </td> 
